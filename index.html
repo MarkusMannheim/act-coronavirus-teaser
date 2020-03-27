@@ -14,7 +14,7 @@
     <title>Creeping coronavirus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <link href="./resources/style.css?v3" rel="stylesheet">
+    <link href="./resources/style.css" rel="stylesheet">
     <link href="./resources/abcLogo64.png" rel="icon">
   </head>
   <body>
@@ -33,7 +33,7 @@
       <div id="notes">Data: <a href='https://www.health.act.gov.au/about-our-health-system/novel-coronavirus-covid-19/confirmed-case-details'>ACT Health</a>, <a href='https://www.health.nsw.gov.au/Infectious/diseases/Pages/covid-19-latest.aspx'>Health Protection NSW</a></div>
     </div>
     <script>
-      d3.json("./resources/latestCount.json", function(error, data) {
+      d3.json("./resources/latestCount.json" + Math.round(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
         for (key in data) {
           if (!data[key].includes("-")) data[key] = d3.format(",")(data[key]);
