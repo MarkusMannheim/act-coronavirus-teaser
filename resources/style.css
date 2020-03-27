@@ -17,22 +17,40 @@
 }
 body {
   margin: 0;
-  padding: 1rem;
   overflow: hidden;
   background-color: rgb(238, 238, 238);
 }
+#container {
+  padding: 1rem;
+}
 h1 {
-  margin: 0;
-  padding: 0 0 .5rem 0;
   font-weight: bold;
   font-size: 1rem;
+  margin: 0 0 .5rem 0;
+}
+#title {
+  font-family: "ABCSans Black", "Arial Black", sans-serif;
+  font-size: 1.25rem;
+  color: #1C1C1C;
+  margin: 0 0 1rem 0;
 }
 ul {
   margin: 0;
+  padding: 0;
   list-style-position: inside;
-  padding-left: 0;
 }
 span {
   font-family: "ABCSans Black", "Arial Black", sans-serif;
+  color: #009CBF;
+}
+#notes {
+  margin: 1rem 0 0 0;
+  color: grey;
+  font-size: .9rem;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
   color: #009CBF;
 }

@@ -19,14 +19,16 @@
   </head>
   <body>
     <div id="container">
+      <h1 id="title">ACT COVID-19 snapshot</h1>
       <h1>Canberra</h1>
-      <ul>
+      <ul id="act">
         <li id="actConfirmedCases">confirmed cases: <span></span></li>
         <li id="actRecovered">recovered cases: <span></span></li>
         <li id="actNegativeTests">tested negative: <span></span></li>
       </ul>
       <h1 style="margin-top: 1rem;">cases in surrounding region</h1>
-      <ul></ul>
+      <ul id="region"></ul>
+      <div id="notes">Data: <a href='https://www.health.act.gov.au/about-our-health-system/novel-coronavirus-covid-19/confirmed-case-details'>ACT Health</a>, <a href='https://www.health.nsw.gov.au/Infectious/diseases/Pages/coronavirus.aspx'>Health Protection NSW</a></div>
     </div>
     <script>
       d3.json("./resources/latestCount.json", function(error, data) {
@@ -36,13 +38,14 @@
           if (document.querySelector("#" + key)) {
             document.querySelector("#" + key + " span").innerText = data[key];
           } else {
-            d3.select("ul:last-child")
+            d3.select("#region")
               .append("li")
                 .attr("id", key)
                 .html(key + ": <span>" + data[key] + "</span>");
           }
         }
       });
+      console.log(d3.select("#container").style("height"));
     </script>
   </body>
 </html>
