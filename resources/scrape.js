@@ -49,7 +49,7 @@ async function scrape() {
 
 scrape()
   .then(function(data) {
-    fs.writeFile("./resources/latestCount.json", JSON.stringify(data), function(error) {
+    fs.writeFile("./latestCount.json", JSON.stringify(data), function(error) {
       console.log("latestCount.json written");
     });
   })
