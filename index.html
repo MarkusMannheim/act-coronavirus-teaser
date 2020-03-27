@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155991615-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-155991615-1');
+    </script>
+    <!-- my stuff -->
+    <meta charset="utf-8">
+    <title>Creeping coronavirus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link href="./resources/style.css" rel="stylesheet">
+    <link href="./resources/abcLogo64.png" rel="icon">
+  </head>
+  <body>
+    <div id="container">
+      <h1>Canberra</h1>
+      <ul>
+        <li id="actConfirmedCases">confirmed cases: <span></span></li>
+        <li id="actRecovered">recovered cases: <span></span></li>
+        <li id="actNegativeTests">tested negative: <span></span></li>
+      </ul>
+      <h1 style="margin-top: 1rem;">surrounding region</h1>
+      <ul></ul>
+    </div>
+    <script>
+      d3.json("./resources/latestCount.json", function(error, data) {
+        if (error) throw error;
+        for (key in data) {
+          if (!data[key].includes("-")) data[key] = d3.format(",")(data[key]);
+          if (document.querySelector("#" + key)) {
+            document.querySelector("#" + key + " span").innerText = data[key];
+          } else {
+            d3.select("ul:last-child")
+              .append("li")
+                .attr("id", key)
+                .html(key + ": <span>" + data[key] + "</span>");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
