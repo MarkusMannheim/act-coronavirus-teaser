@@ -14,7 +14,7 @@
     <title>Creeping coronavirus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <link href="./resources/style.css?v1" rel="stylesheet">
+    <link href="./resources/style.css?v2" rel="stylesheet">
     <link href="./resources/abcLogo64.png" rel="icon">
   </head>
   <body>
@@ -26,9 +26,11 @@
         <li id="actRecovered">recovered cases: <span></span></li>
         <li id="actNegativeTests">tested negative: <span></span></li>
       </ul>
-      <h1 style="margin-top: 1rem;">cases in surrounding region</h1>
-      <ul id="region"></ul>
-      <div id="notes">Data: <a href='https://www.health.act.gov.au/about-our-health-system/novel-coronavirus-covid-19/confirmed-case-details'>ACT Health</a>, <a href='https://www.health.nsw.gov.au/Infectious/diseases/Pages/coronavirus.aspx'>Health Protection NSW</a></div>
+      <div id="region">
+        <h1 style="margin-top: 1rem;">cases in surrounding region</h1>
+        <ul></ul>
+      </div>
+      <div id="notes">Data: <a href='https://www.health.act.gov.au/about-our-health-system/novel-coronavirus-covid-19/confirmed-case-details'>ACT Health</a>, <a href='https://www.health.nsw.gov.au/Infectious/diseases/Pages/covid-19-latest.aspx'>Health Protection NSW</a></div>
     </div>
     <script>
       d3.json("./resources/latestCount.json", function(error, data) {
@@ -39,6 +41,7 @@
             document.querySelector("#" + key + " span").innerText = data[key];
           } else {
             d3.select("#region")
+              .style("display", "block")
               .append("li")
                 .attr("id", key)
                 .html(key + ": <span>" + data[key] + "</span>");

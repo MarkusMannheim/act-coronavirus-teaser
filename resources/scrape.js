@@ -50,7 +50,7 @@ async function scrape() {
 scrape()
   .then(function(data) {
     fs.writeFile("./latestCount.json", JSON.stringify(data), function(error) {
-      console.log("./latestCount.json written");
+      console.log("./resources/latestCount.json written");
     });
   })
   .catch(console.error);
