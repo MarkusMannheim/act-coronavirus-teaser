@@ -50,9 +50,10 @@ span {
 }
 a {
   text-decoration: none;
+  color: #009CBF;
 }
 a:hover {
-  color: #009CBF;
+  color: #FF6100;
 }
 #region {
   display: none;

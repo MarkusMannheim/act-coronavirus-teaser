@@ -22,14 +22,14 @@ async function scrape() {
       });
       console.log(actData);
       console.log("load NSW page");
-      await page.goto("https://www.health.nsw.gov.au/Infectious/diseases/Pages/covid-19-latest.aspx");
-      await page.waitForSelector(".moh-rteTable-6");
+      await page.goto("https://www.health.nsw.gov.au/Infectious/diseases/Pages/covid-19-lga.aspx");
+      await page.waitForSelector(".moh-rteStyle-Normal-1");
       console.log("scrape NSW page");
       let nswData = await page.evaluate(function() {
-        let names = document.querySelectorAll(".moh-rteTable-6")[4].querySelectorAll("tr td:first-child");
-        let cases = document.querySelectorAll(".moh-rteTable-6")[4].querySelectorAll("tr td:last-child");
+        let names = document.querySelector(".moh-rteStyle-Normal-1").querySelectorAll("tbody tr td:first-child");
+        let cases = document.querySelector(".moh-rteStyle-Normal-1").querySelectorAll("tbody tr td:last-child");
         data = {};
-        councils = ["Queanbeyan-Palerang Regional", "Gouldburn Mulwaree", "Eurobodalla", "Yass Valley", "Snowy Monaro Regional"]
+        councils = ["Queanbeyan-Palerang Regional", "Goulburn Mulwaree", "Eurobodalla", "Yass Valley", "Snowy Monaro Regional"];
         for (i = 0; i < names.length; i++) {
           if (councils.includes(names[i].innerText)) {
             data[names[i].innerText.replace(" Regional", "")] = cases[i].innerText;
