@@ -10,14 +10,14 @@ async function scrape() {
     console.log("begin promise()");
     try {
       console.log("load ACT page");
-      await page.goto("https://www.health.act.gov.au/about-our-health-system/novel-coronavirus-covid-19/confirmed-case-details");
-      await page.waitForSelector(".clearfix tbody");
+      await page.goto("https://www.covid19.act.gov.au/updates/confirmed-case-information");
+      await page.waitForSelector("#table42313");
       console.log("scrape ACT page");
       let actData = await page.evaluate(function() {
-        let rows = document.querySelector(".clearfix tbody").querySelectorAll("tr td:nth-child(2)");
-        return { actConfirmedCases: rows[1].innerText,
-                 actNegativeTests: rows[2].innerText,
-                 actRecovered: rows[3].innerText
+        let cells = document.querySelectorAll("#table42313 td");
+        return { actConfirmedCases: cells[0].innerText,
+                 actNegativeTests: cells[1].innerText,
+                 actRecovered: cells[2].innerText
                };
       });
       console.log(actData);
