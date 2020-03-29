@@ -23,11 +23,11 @@ async function scrape() {
       console.log(actData);
       console.log("load NSW page");
       await page.goto("https://www.health.nsw.gov.au/Infectious/diseases/Pages/covid-19-lga.aspx");
-      await page.waitForSelector(".moh-rteStyle-Normal-1");
+      await page.waitForSelector(".moh-rteTable-6");
       console.log("scrape NSW page");
       let nswData = await page.evaluate(function() {
-        let names = document.querySelector(".moh-rteStyle-Normal-1").querySelectorAll("tbody tr td:first-child");
-        let cases = document.querySelector(".moh-rteStyle-Normal-1").querySelectorAll("tbody tr td:last-child");
+        let names = document.querySelector(".moh-rteTable-6").querySelectorAll("tbody tr td:first-child");
+        let cases = document.querySelector(".moh-rteTable-6").querySelectorAll("tbody tr td:last-child");
         data = {};
         councils = ["Queanbeyan-Palerang Regional", "Goulburn Mulwaree", "Eurobodalla", "Yass Valley", "Snowy Monaro Regional"];
         for (i = 0; i < names.length; i++) {
