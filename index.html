@@ -31,7 +31,7 @@
       d3.json("./resources/latestCount.json?randomKey=" + Math.round(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
         for (key in data) {
-          if (!data[key].includes("-")) data[key] = d3.format(",")(data[key]);
+          if (!data[key].includes("-")) data[key] = d3.format(",")(data[key].replace("*", ""));
           if (document.querySelector("#" + key)) {
             document.querySelector("#" + key + " span").innerText = data[key];
           }
