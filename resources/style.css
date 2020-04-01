@@ -34,5 +34,6 @@ ul {
   list-style-position: inside;
 }
 span {
+  font-weight: bold;
   color: #0058cc;
 }
