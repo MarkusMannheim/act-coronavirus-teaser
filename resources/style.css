@@ -5,12 +5,6 @@
   font-weight: normal;
   src: local("ABCSans Regular"), url("./abcsans-regular.woff") format("woff");
 }
-@font-face {
-  font-family: "ABCSans Black";
-  font-style: normal;
-  font-weight: normal;
-  src: local("ABCSans Black"), url("./abcsans-black.woff") format("woff");
-}
 :root {
   font-size: 1em;
   font-family: "ABCSans Regular", "Arial", sans-serif;
@@ -29,7 +23,7 @@ h1 {
   margin: 0 0 .5rem 0;
 }
 #title {
-  font-family: "ABCSans Black", "Arial Black", sans-serif;
+  font-weight: bold;
   font-size: 1.25rem;
   color: #1C1C1C;
   margin: 0 0 1rem 0;
@@ -40,21 +34,5 @@ ul {
   list-style-position: inside;
 }
 span {
-  font-family: "ABCSans Black", "Arial Black", sans-serif;
-  color: #009CBF;
-}
-#notes {
-  margin: 1rem 0 0 0;
-  color: grey;
-  font-size: .9rem;
-}
-a {
-  text-decoration: none;
-  color: #009CBF;
-}
-a:hover {
-  color: #FF6100;
-}
-#region {
-  display: none;
+  color: #0058cc;
 }
