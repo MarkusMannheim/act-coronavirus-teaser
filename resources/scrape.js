@@ -1,5 +1,4 @@
 puppeteer = require("puppeteer"),
-d3 = require("d3"),
 fs = require("fs");
 
 async function scrape() {
