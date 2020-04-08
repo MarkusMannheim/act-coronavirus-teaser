@@ -23,10 +23,11 @@
     <div id="container">
       <h1 id="title">COVID-19 in Canberra</h1>
       <ul>
-        <li id="cases">tested positive: <span></span></li>
         <li id="negative">tested negative: <span></span></li>
-        <li id="recovered">recoveries: <span></span></li>
-        <li id="dead">deaths: <span></span></li>
+        <li id="cases">tested positive: <span></span></li>
+        <li id="infected">infected: <span></span></li>
+        <li id="recovered">recovered: <span></span></li>
+        <li id="dead">dead: <span></span></li>
       </ul>
       <svg id="treemap"></svg>
     </div>
@@ -37,11 +38,46 @@
         covidData = data;
         for (key in covidData) {
           if (document.querySelector("#" + key)) {
-            data[key] = +data[key];
-            document.querySelector("#" + key + " span").innerText = d3.format(",")(data[key]);
+            covidData[key] = +covidData[key];
+            document.querySelector("#" + key + " span").innerText = d3.format(",")(covidData[key]);
           }
         }
+        d3.select("#infected span")
+          .text(d3.format(",")(covidData.cases - covidData.recovered));
         svg = d3.select("svg");
+        window.addEventListener("resize", resize);
+        resize();
+        hierarchyData = {
+          name: "ACT", children: [
+            { name: "negative", value: covidData.negative },
+            { name: "infected", value: covidData.cases - covidData.recovered },
+            { name: "recovered", value: covidData.recovered },
+            { name: "dead", value: covidData.dead }
+          ]
+        };
+        // delete
+        root = d3.hierarchy(hierarchyData)
+          .sum(function(d) { return d.value; })
+          .sort(function(a, b) { return d3.descending(a, b); });
+        treemap = d3.treemap()
+          .size([width, height])
+          .padding(1);
+        treemap(root);
+        boxes = svg
+          .selectAll("rect")
+            .data(root.children)
+          .enter().append("rect")
+            .attr("x", function(d) { return d.x0; })
+            .attr("y", function(d) { return d.y0; })
+            .attr("width", function(d) { return d.x1 - d.x0; })
+            .attr("height", function(d) { return d.y1 - d.y0; })
+            .attr("class", function(d) { return d.data.name; });
+
+        function resize() {
+          let dimensions = document.getElementById("treemap").getBoundingClientRect();
+          width = dimensions.width;
+          height = dimensions.height;
+        }
       });
     </script>
   </body>
