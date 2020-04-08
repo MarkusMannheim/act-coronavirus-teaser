@@ -11,31 +11,91 @@
     </script>
     <!-- my stuff -->
     <meta charset="utf-8">
-    <title>ACT region coronavirus updates</title>
+    <title>ACT coronavirus updates</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <link href="./resources/style.css?v3" rel="stylesheet">
+    <link href="./resources/style.css" rel="stylesheet">
     <link href="./resources/abcLogo64.png" rel="icon">
   </head>
   <body>
+    <!-- initial layout -->
     <div id="container">
-      <h1 id="title">ACT COVID-19 snapshot</h1>
-      <ul>
-        <li id="actConfirmedCases">confirmed cases: <span></span></li>
-        <li id="actNegativeTests">tested negative: <span></span></li>
-        <li id="actRecovered">recovered: <span></span></li>
-        <li id="actDead">deaths: <span></span></li>
-      </ul>
+      <div id="header">
+        <h1 id="title">COVID-19 in Canberra</h1>
+        <table>
+          <tbody>
+            <tr id="cases">
+              <td><ul><li>tested positive:</li></ul></td>
+              <td></td>
+            </tr>
+            <tr id="negative">
+              <td><ul><li>tested negative:</li></ul></td>
+              <td></td>
+            </tr>
+            <tr id="infected">
+              <td><ul><li>infected:</li></ul></td>
+              <td></td>
+            </tr>
+            <tr id="recovered">
+              <td><ul><li>recovered:</li></ul></td>
+              <td></td>
+            </tr>
+            <tr id="dead">
+              <td><ul><li>dead:</li></ul></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <svg id="treemap"></svg>
     </div>
     <script>
+      // load scraped data (in-built cache refresh)
       d3.json("./resources/latestCount.json?randomKey=" + Math.round(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
-        for (key in data) {
-          if (!data[key].includes("-")) data[key] = d3.format(",")(data[key].replace("*", ""));
+        covidData = data;
+        for (key in covidData) {
           if (document.querySelector("#" + key)) {
-            document.querySelector("#" + key + " span").innerText = data[key];
+            covidData[key] = +covidData[key];
+            document.querySelector("#" + key + " td:last-child").innerText = d3.format(",")(covidData[key]);
           }
+        }
+        d3.select("#infected td:last-child")
+          .text(d3.format(",")(covidData.cases - covidData.recovered));
+        svg = d3.select("svg");
+        window.addEventListener("resize", resize);
+        hierarchyData = {
+          name: "ACT", children: [
+            { name: "negative", value: covidData.negative },
+            { name: "infected", value: covidData.cases - covidData.recovered },
+            { name: "recovered", value: covidData.recovered },
+            { name: "dead", value: covidData.dead }
+          ]
+        };
+        // delete
+        root = d3.hierarchy(hierarchyData)
+          .sum(function(d) { return d.value; })
+          .sort(function(a, b) { return d3.ascending(a.value, b.value); });
+        treemap = d3.treemap()
+          .padding(1);
+        boxes = svg
+          .selectAll("rect")
+            .data(root.children)
+          .enter().append("rect")
+            .attr("class", function(d) { return "box " + d.data.name; });
+        resize();
+
+        function resize() {
+          let dimensions = document.getElementById("treemap").getBoundingClientRect();
+          width = dimensions.width;
+          height = dimensions.height;
+          treemap.size([width, height])(root);
+          d3.selectAll(".box")
+            .attr("x", function(d) { return d.x0; })
+            .attr("y", function(d) { return d.y0; })
+            .attr("width", function(d) { return d.x1 - d.x0; })
+            .attr("height", function(d) { return d.y1 - d.y0; });
         }
       });
     </script>
