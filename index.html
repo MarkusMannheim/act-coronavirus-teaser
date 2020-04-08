@@ -19,6 +19,7 @@
     <link href="./resources/abcLogo64.png" rel="icon">
   </head>
   <body>
+    <!-- initial layout -->
     <div id="container">
       <h1 id="title">ACT COVID-19 snapshot</h1>
       <ul>
@@ -29,6 +30,7 @@
       </ul>
     </div>
     <script>
+      // load scraped data (in-built cache refresh)
       d3.json("./resources/latestCount.json?randomKey=" + Math.round(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
         for (key in data) {
