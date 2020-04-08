@@ -11,33 +11,37 @@
     </script>
     <!-- my stuff -->
     <meta charset="utf-8">
-    <title>ACT region coronavirus updates</title>
+    <title>ACT coronavirus updates</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <link href="./resources/style.css?v3" rel="stylesheet">
+    <link href="./resources/style.css" rel="stylesheet">
     <link href="./resources/abcLogo64.png" rel="icon">
   </head>
   <body>
     <!-- initial layout -->
     <div id="container">
-      <h1 id="title">ACT COVID-19 snapshot</h1>
+      <h1 id="title">COVID-19 in Canberra</h1>
       <ul>
-        <li id="cases">confirmed cases: <span></span></li>
+        <li id="cases">tested positive: <span></span></li>
         <li id="negative">tested negative: <span></span></li>
-        <li id="recovered">recovered: <span></span></li>
+        <li id="recovered">recoveries: <span></span></li>
         <li id="dead">deaths: <span></span></li>
       </ul>
+      <svg id="treemap"></svg>
     </div>
     <script>
       // load scraped data (in-built cache refresh)
       d3.json("./resources/latestCount.json?randomKey=" + Math.round(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
-        for (key in data) {
+        covidData = data;
+        for (key in covidData) {
           if (document.querySelector("#" + key)) {
-            document.querySelector("#" + key + " span").innerText = d3.format(",")(data[key].replace("*", ""));
+            data[key] = +data[key];
+            document.querySelector("#" + key + " span").innerText = d3.format(",")(data[key]);
           }
         }
+        svg = d3.select("svg");
       });
     </script>
   </body>
