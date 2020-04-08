@@ -28,7 +28,7 @@ async function scrape() {
         };
         return data;
       });
-      console.log("collected these data:\n");
+      console.log("\ncollected these data:");
       for (key in data) {
         console.log(key + ": " + data[key]);
       }
