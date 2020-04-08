@@ -22,19 +22,18 @@
     <div id="container">
       <h1 id="title">ACT COVID-19 snapshot</h1>
       <ul>
-        <li id="actConfirmedCases">confirmed cases: <span></span></li>
-        <li id="actNegativeTests">tested negative: <span></span></li>
-        <li id="actRecovered">recovered: <span></span></li>
-        <li id="actDead">deaths: <span></span></li>
+        <li id="cases">confirmed cases: <span></span></li>
+        <li id="negative">tested negative: <span></span></li>
+        <li id="recovered">recovered: <span></span></li>
+        <li id="dead">deaths: <span></span></li>
       </ul>
     </div>
     <script>
       d3.json("./resources/latestCount.json?randomKey=" + Math.round(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
         for (key in data) {
-          if (!data[key].includes("-")) data[key] = d3.format(",")(data[key].replace("*", ""));
           if (document.querySelector("#" + key)) {
-            document.querySelector("#" + key + " span").innerText = data[key];
+            document.querySelector("#" + key + " span").innerText = d3.format(",")(data[key].replace("*", ""));
           }
         }
       });

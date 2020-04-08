@@ -1,29 +1,27 @@
 puppeteer = require("puppeteer"),
-d3 = require("d3"),
 fs = require("fs");
 
 async function scrape() {
-  console.log("scrape()");
+  console.log("establish scraper ...");
   browser = await puppeteer.launch({headless: true}),
   page = await browser.newPage();
   return new Promise(async function(resolve, reject) {
-    console.log("begin promise()");
     try {
-      console.log("load ACT page");
+      console.log("load ACT Health website ...");
       await page.goto("https://www.covid19.act.gov.au/updates/confirmed-case-information");
       await page.waitForSelector("#table42313");
-      console.log("scrape ACT page");
-      let actData = await page.evaluate(function() {
+      console.log("scrape data ...");
+      data = await page.evaluate(function() {
         let cells = document.querySelectorAll("#table42313 td");
-        return { actConfirmedCases: cells[0].innerText,
-                 actNegativeTests: cells[1].innerText,
-                 actRecovered: cells[2].innerText,
-                 actDead: cells[3].innerText
+        return { cases: cells[0].innerText,
+                 negative: cells[1].innerText,
+                 recovered: cells[2].innerText,
+                 dear: cells[3].innerText
                };
       });
-      console.log(actData);
+      console.log("collected these data:\n\n" + data);
       browser.close();
-      return resolve(actData);
+      return resolve(data);
     } catch (error) {
       return reject(error);
     }
@@ -33,7 +31,7 @@ async function scrape() {
 scrape()
   .then(function(data) {
     fs.writeFile("./latestCount.json", JSON.stringify(data), function(error) {
-      console.log("latestCount.json written");
+      console.log("\nlatestCount.json written");
     });
   })
   .catch(console.error);

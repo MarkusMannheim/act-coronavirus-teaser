@@ -1,7 +1,7 @@
-echo Scraping ACT Health COVID-19 data
-echo off
-START /B /wait node .\scrape.js
-START /B git add ..\*.*
-START /B git commit -m "scheduled update"
-START /B git push
-more
+@ECHO off
+TITLE ACT COVID-19 data update
+ECHO Scraping ACT Health COVID-19 data ...
+start /b /wait node .\scrape.js
+git add ..\*.*
+git commit -m "scheduled update"
+git push
