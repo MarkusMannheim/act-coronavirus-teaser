@@ -16,7 +16,7 @@ async function scrape() {
         return { cases: cells[0].innerText,
                  negative: cells[1].innerText,
                  recovered: cells[2].innerText,
-                 dear: cells[3].innerText
+                 dead: cells[3].innerText
                };
       });
       console.log("collected these data:\n\n" + data);
