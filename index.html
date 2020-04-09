@@ -68,7 +68,7 @@
         hierarchyData = {
           name: "ACT", children: [
             { name: "negative", value: covidData.negative },
-            { name: "infected", value: covidData.cases - covidData.recovered = covidData.dead},
+            { name: "infected", value: covidData.cases - covidData.recovered - covidData.dead},
             { name: "recovered", value: covidData.recovered },
             { name: "dead", value: covidData.dead }
           ]
