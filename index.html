@@ -54,23 +54,21 @@
       // load scraped data (in-built cache refresh)
       d3.json("./resources/latestCount.json?randomKey=" + Math.round(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
-        covidData = data;
-        for (key in covidData) {
+        data.infected = +data.cases - +data.recovered - +data.dead;
+        for (key in data) {
           if (document.querySelector("#" + key)) {
-            covidData[key] = +covidData[key];
-            document.querySelector("#" + key + " td:last-child").innerText = d3.format(",")(covidData[key]);
+            data[key] = +data[key];
+            document.querySelector("#" + key + " td:last-child").innerText = d3.format(",")(data[key]);
           }
         }
-        d3.select("#infected td:last-child")
-          .text(d3.format(",")(covidData.cases - covidData.recovered - covidData.dead));
         svg = d3.select("svg");
         window.addEventListener("resize", resize);
         hierarchyData = {
           name: "ACT", children: [
-            { name: "negative", value: covidData.negative },
-            { name: "infected", value: covidData.cases - covidData.recovered - covidData.dead},
-            { name: "recovered", value: covidData.recovered },
-            { name: "dead", value: covidData.dead }
+            { name: "negative", value: data.negative },
+            { name: "infected", value: data.infected},
+            { name: "recovered", value: data.recovered },
+            { name: "dead", value: data.dead }
           ]
         };
         // delete
@@ -85,7 +83,7 @@
           .enter().append("rect")
             .attr("class", function(d) { return "box " + d.data.name; });
         resize();
-
+        // responses to wnidow resizing, rescales and redraws chart
         function resize() {
           let dimensions = document.getElementById("treemap").getBoundingClientRect();
           width = dimensions.width;
