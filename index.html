@@ -62,7 +62,7 @@
           }
         }
         d3.select("#infected td:last-child")
-          .text(d3.format(",")(covidData.cases - covidData.recovered));
+          .text(d3.format(",")(covidData.cases - covidData.recovered - covidData.dead));
         svg = d3.select("svg");
         window.addEventListener("resize", resize);
         hierarchyData = {
