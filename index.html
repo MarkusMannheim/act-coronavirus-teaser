@@ -82,7 +82,9 @@
             .data(root.children)
           .enter().append("rect")
             .attr("class", function(d) { return "box " + d.data.name; });
-        resize();
+        for (i=0; i < 2000; i = i + 500) {
+          d3.timeout(resize, i);
+        }
         // responses to wnidow resizing, rescales and redraws chart
         function resize() {
           let dimensions = document.getElementById("treemap").getBoundingClientRect();
