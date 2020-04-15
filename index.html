@@ -86,9 +86,12 @@
             .data(function(d) { return d; })
           .enter().append("rect")
             .classed("bar", true);
-        resize();
+        for (i = 0; i < 2000; i = i + 250) {
+          d3.timeout(resize, i);
+        }
       });
       function resize() {
+        console.log("resize()");
         let dimensions = document.getElementById("chart").getBoundingClientRect();
         width = dimensions.width;
         height = dimensions.height;
