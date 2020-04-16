@@ -59,12 +59,13 @@
           .enter().append("div")
             .attr("class", function(d) { return "row " + d; });
         rows.append("div");
+        d3.select(".row div")
+          .remove();
         rows.append("div")
-          .text(function(d) { return d + ":"; });
+          .text(function(d) { return d == "confirmed" ? d + " cases:" : d + ":"; });
         rows.append("div")
           .text(function(d) { return covidData[covidData.length - 1][d]; })
         // prepare chart
-        margin = { top: 0, right: 0, bottom: 20, left: 0};
         x = d3.scaleBand()
           .domain(covidData.map(function(d) { return d.date; }))
           .paddingInner(.15);
@@ -72,7 +73,6 @@
           .domain(d3.extent(covidData, function(d) { return d.confirmed; }));
         xAxis = d3.axisBottom()
           .tickSize(0)
-          .tickPadding(8)
           .ticks(3, "%b %-d");
         stack = d3.stack()
           .keys(["recovered", "infected", "deaths"].reverse());
@@ -94,11 +94,13 @@
         let dimensions = document.getElementById("chart").getBoundingClientRect();
         width = dimensions.width;
         height = dimensions.height;
+        margin = { top: 0, right: 0, bottom: (width < 500 ? 20 : 30), left: 0};
         x.range([margin.left, width - margin.right]);
         xAxis.scale(d3.scaleTime()
-          .domain(d3.extent(covidData, function(d) { return d.date; }))
-          .range(x.range())
-        );
+            .domain(d3.extent(covidData, function(d) { return d.date; }))
+            .range(x.range())
+          )
+          .tickPadding(width == 340 ? 8 : width < 500 ? 10 : 15);
         axisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
         y.range([height - margin.bottom, margin.top]);
         d3.selectAll(".bar")
