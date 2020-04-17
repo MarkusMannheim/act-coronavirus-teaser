@@ -44,15 +44,10 @@
     </div>
     <script>
       // load scraped data (with in-built cache refresh)
-      d3.csv("./resources/actData.csv", function(error, data) {
+      d3.csv("./resources/actData.csv?randomKey=" + Math.floor(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
         covidData = data;
-        table = d3.select("#table");
-        chart = d3.select("#chart");
-        chartGroup = d3.select("#chartGroup");
-        axisGroup = d3.select("#axisGroup");
-        window.addEventListener("resize", resize);
-        // reformat data
+        // format data
         covidData.forEach(function(d) {
           for (key in d) {
             if (key == "date") {
@@ -63,6 +58,13 @@
           }
           d.infected = d.confirmed - d.recovered - d.deaths;
         });
+        // establish page elements
+        table = d3.select("#table");
+        chart = d3.select("#chart");
+        chartGroup = d3.select("#chartGroup");
+        axisGroup = d3.select("#axisGroup");
+        // redraws page when it's resized
+        window.addEventListener("resize", resize);
         // fill table
         rows = table
           .selectAll("row")
