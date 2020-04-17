@@ -27,9 +27,9 @@ async function scrape() {
       });
       latest = {
         recovered: latest[0],
-        confirmed: latest[1],
-        deaths: latest[2],
-        date: latest[3]
+        confirmed: latest[3],
+        deaths: latest[5],
+        date: latest[2]
       };
       console.log("scraped latest update:");
       console.log(latest);
