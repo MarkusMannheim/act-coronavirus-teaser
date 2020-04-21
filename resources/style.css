@@ -81,7 +81,7 @@ body {
   fill: #1C1C1C;
   font-size: .7rem;
 }
-@media only screen and (width: 340px) {
+@media only screen and (width: 340px) and (height: 340px) {
   body {
     background-color: #f9f9f9;
   }
