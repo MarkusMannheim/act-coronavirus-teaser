@@ -71,13 +71,10 @@
             .data(["confirmed", "infected", "recovered", "deaths"])
           .enter().append("div")
             .attr("class", function(d) { return "row " + d; });
-        rows.append("div");
-        d3.select(".row div")
-          .remove();
         rows.append("div")
           .text(function(d) { return d == "confirmed" ? d + " cases:" : d + ":"; });
         rows.append("div")
-          .text(function(d) { return covidData[covidData.length - 1][d]; })
+          .text(function(d) { return covidData[covidData.length - 1][d]; });
         // prepare chart
         x = d3.scaleBand()
           .domain(covidData.map(function(d) { return d.date; }))
