@@ -39,6 +39,7 @@ body {
 }
 .row {
   display: flex;
+  justify-content: space-between;
   width: 12rem;
 }
 .row:first-child {
@@ -50,19 +51,24 @@ body {
 .row div:last-child {
   font-family: "ABCSans Black", "Arial Black", sans-serif;
   text-align: right;
-  width: 2rem;
+  padding: 0 .25rem;
+  width: 1.5rem;
+  color: white;
+}
+.row:first-child div:last-child {
+  color: #1C1C1C;
 }
 .row.recovered div:last-child, .layer.recovered {
-  background-color: #00B395;
-  fill: #00B395;
+  background-color: #00A388;
+  fill: #00A388;
 }
 .row.infected div:last-child, .layer.infected {
   background-color: #FFB300;
   fill: #FFB300;
 }
 .row.deaths div:last-child, .layer.deaths {
-  background-color: #FF6100;
-  fill: #FF6100;
+  background-color: #F75F00;
+  fill: #F75F00;
 }
 #chart {
   margin-top: 1rem;
@@ -99,6 +105,11 @@ body {
   }
   .row:first-child {
     margin-bottom: 1rem;
+  }
+  .row div:last-child {
+    padding: 0 .5rem;
+    width: 2rem;
+    color: white;
   }
   #axisGroup text {
     font-size: .9rem;
