@@ -80,11 +80,14 @@ body {
   fill: #1C1C1C;
   font-size: .7rem;
 }
+#yAxisGroup .tick text {
+  font-size: .8rem;
+}
 #axisGroup path {
   stroke: none;
 }
 #axisGroup .tick line {
-  stroke: rgba(28, 28, 28, .5);
+  stroke: rgba(28, 28, 28, .25);
   stroke-dasharray: 3 3
 }
 @media only screen and (width: 340px) and (height: 340px) {
@@ -93,6 +96,9 @@ body {
   }
   #container {
     padding: 0;
+  }
+  #yAxisGroup {
+    display: none;
   }
 }
 @media only screen and (min-width: 500px) {
@@ -121,5 +127,8 @@ body {
   }
   #axisGroup .tick text {
     font-size: .9rem;
+  }
+  #yAxisGroup .tick text {
+    font-size: 1rem;
   }
 }

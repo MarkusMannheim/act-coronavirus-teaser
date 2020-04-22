@@ -122,7 +122,8 @@
         xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
         y.range([height - margin.bottom, margin.top]);
         yAxis.scale(y)
-          .tickSizeInner(margin.left + margin.right - width);
+          .tickSizeInner(margin.left + margin.right - width)
+          .tickPadding(width < 500 ? -20: -25);
         yAxisGroup.attr("transform", "translate(" + margin.left + ", 0)");
         d3.selectAll(".bar")
           .attr("x", function(d) { return x(d.data.date); })
