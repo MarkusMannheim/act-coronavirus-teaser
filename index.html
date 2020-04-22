@@ -39,7 +39,10 @@
       </div>
       <svg id="chart">
         <g id="chartGroup"></g>
-        <g id="axisGroup"></g>
+        <g id="axisGroup">
+          <g id="xAxisGroup"></g>
+          <g id="yAxisGroup"></g>
+        </g>
       </svg>
     </div>
     <script>
@@ -63,6 +66,8 @@
         chart = d3.select("#chart");
         chartGroup = d3.select("#chartGroup");
         axisGroup = d3.select("#axisGroup");
+        xAxisGroup = d3.select("#xAxisGroup");
+        yAxisGroup = d3.select("#yAxisGroup");
         // redraws page when it's resized
         window.addEventListener("resize", resize);
         // fill table
@@ -84,6 +89,9 @@
         xAxis = d3.axisBottom()
           .tickSize(0)
           .ticks(3, "%b %-d");
+        yAxis = d3.axisLeft()
+          .tickSizeOuter(0)
+          .ticks(4, "2s");
         stack = d3.stack()
           .keys(["recovered", "infected", "deaths"].reverse());
         layers = chartGroup
@@ -111,15 +119,19 @@
             .range(x.range())
           )
           .tickPadding(width == 340 ? 8 : width < 500 ? 10 : 15);
-        axisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
+        xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
         y.range([height - margin.bottom, margin.top]);
+        yAxis.scale(y)
+          .tickSizeInner(margin.left + margin.right - width);
+        yAxisGroup.attr("transform", "translate(" + margin.left + ", 0)");
         d3.selectAll(".bar")
           .attr("x", function(d) { return x(d.data.date); })
           .attr("y", function(d) { return y(d[1]); })
           .attr("width", x.bandwidth())
           .attr("height", function(d) { return y(d[0]) - y(d[1]); });
-        axisGroup.call(xAxis);
-        }
+        xAxisGroup.call(xAxis);
+        yAxisGroup.call(yAxis);
+      }
     </script>
   </body>
 </html>
