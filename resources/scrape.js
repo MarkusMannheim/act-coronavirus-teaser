@@ -16,7 +16,7 @@ async function scrape() {
         return document.querySelector(".col-md-12 a").href;
       });
       await page.goto(dashUrl);
-      await page.waitForSelector(".card")
+      await page.waitFor(2500);
       latest = await page.evaluate(function() {
         let data = [];
         document.querySelectorAll(".card")
