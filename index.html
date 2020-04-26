@@ -88,7 +88,7 @@
           .domain(d3.extent(covidData, function(d) { return d.confirmed; }));
         xAxis = d3.axisBottom()
           .tickSize(0)
-          .ticks(3, "%b %-d");
+          .ticks(4, "%b %-d");
         yAxis = d3.axisLeft()
           .tickSizeOuter(0)
           .ticks(4, "2s");
