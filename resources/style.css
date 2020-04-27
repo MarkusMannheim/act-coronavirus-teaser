@@ -91,9 +91,6 @@ body {
   stroke-dasharray: 3 3
 }
 @media only screen and (width: 285px) and (height: 285px) {
-  body {
-    background-color: #f9f9f9;
-  }
   #container {
     padding: 0;
   }
