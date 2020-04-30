@@ -22,7 +22,6 @@ body {
   overflow: hidden;
 }
 #container {
-  padding: 1rem;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -89,11 +88,6 @@ body {
 #axisGroup .tick line {
   stroke: rgba(28, 28, 28, .25);
   stroke-dasharray: 3 3
-}
-@media only screen and (width: 638px) {
-  #container {
-    padding: 0;
-  }
 }
 @media only screen and (min-width: 639px) {
   #container {
