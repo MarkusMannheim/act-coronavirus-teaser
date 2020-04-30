@@ -112,18 +112,18 @@
         let dimensions = document.getElementById("chart").getBoundingClientRect();
         width = dimensions.width;
         height = dimensions.height;
-        margin = { top: 0, right: 0, bottom: (width < 500 ? 20 : 30), left: 0};
+        margin = { top: 0, right: 0, bottom: (width < 638 ? 20 : 30), left: 0};
         x.range([margin.left, width - margin.right]);
         xAxis.scale(d3.scaleTime()
             .domain(d3.extent(covidData, function(d) { return d.date; }))
             .range(x.range())
           )
-          .tickPadding(width == 340 ? 8 : width < 500 ? 10 : 15);
+          .tickPadding(width == 638 ? 8 : width < 639 ? 10 : 15);
         xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
         y.range([height - margin.bottom, margin.top]);
         yAxis.scale(y)
           .tickSizeInner(margin.left + margin.right - width)
-          .tickPadding(width < 500 ? -20: -25);
+          .tickPadding(width < 639 ? -20: -25);
         yAxisGroup.attr("transform", "translate(" + margin.left + ", 0)");
         d3.selectAll(".bar")
           .attr("x", function(d) { return x(d.data.date); })
