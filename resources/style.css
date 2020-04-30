@@ -90,12 +90,12 @@ body {
   stroke: rgba(28, 28, 28, .25);
   stroke-dasharray: 3 3
 }
-@media only screen and (width: 638px) and (height: 638px) {
+@media only screen and (width: 638px) {
   #container {
     padding: 0;
   }
 }
-@media only screen and (min-width: 639px) and (min-height: 639px) {
+@media only screen and (min-width: 639px) {
   #container {
     padding: 2rem;
   }
