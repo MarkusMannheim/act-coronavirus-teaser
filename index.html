@@ -114,12 +114,12 @@
         margin = { top: 0, right: 0, bottom: (width < 638 ? 20 : 30), left: 0};
         x.range([margin.left, width - margin.right]);
         let xTicks = width > 637  ? 5 : 4;
-          .ticks(xTicks, "%b %-d")
         xAxis.scale(d3.scaleTime()
             .domain(d3.extent(covidData, function(d) { return d.date; }))
             .range(x.range())
           )
-          .tickPadding(width == 638 ? 8 : width < 639 ? 10 : 15);
+          .tickPadding(width == 638 ? 8 : width < 639 ? 10 : 15)
+          .ticks(xTicks, "%b %-d");
         xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
         y.range([height - margin.bottom, margin.top]);
         yAxis.scale(y)
