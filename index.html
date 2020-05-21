@@ -87,8 +87,7 @@
         y = d3.scaleLinear()
           .domain(d3.extent(covidData, function(d) { return d.confirmed; }));
         xAxis = d3.axisBottom()
-          .tickSize(0)
-          .ticks(4, "%b %-d");
+          .tickSize(0);
         yAxis = d3.axisLeft()
           .tickSizeOuter(0)
           .ticks(4, "2s");
@@ -114,6 +113,8 @@
         height = dimensions.height;
         margin = { top: 0, right: 0, bottom: (width < 638 ? 20 : 30), left: 0};
         x.range([margin.left, width - margin.right]);
+        let xTicks = width > 637  ? 5 : 4;
+          .ticks(xTicks, "%b %-d")
         xAxis.scale(d3.scaleTime()
             .domain(d3.extent(covidData, function(d) { return d.date; }))
             .range(x.range())
