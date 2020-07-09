@@ -119,7 +119,7 @@
             .range(x.range())
           )
           .tickPadding(width == 638 ? 8 : width < 639 ? 10 : 15)
-          .ticks(xTicks, "%b %-d");
+          .ticks(xTicks, "%b");
         xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
         y.range([height - margin.bottom, margin.top]);
         yAxis.scale(y)
