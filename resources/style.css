@@ -33,7 +33,7 @@ body {
 #title {
   font-weight: bold;
   font-size: 1.25rem;
-  color: #1C1C1C;
+  color: #009CBF;
   margin: 0 0 1rem 0;
 }
 .row {
@@ -41,11 +41,8 @@ body {
   justify-content: space-between;
   width: 12rem;
 }
-.row:first-child {
-  margin-bottom: .5rem;
-}
 .row:nth-child(even) {
-  background-color: rgb(238, 238, 238);
+  background-color: rgba(28, 28, 28, .05);
 }
 .row div {
   padding: 0 .25rem;
@@ -60,12 +57,12 @@ body {
   color: #1C1C1C;
 }
 .row.recovered div:last-child, .layer.recovered {
-  background-color: #00A388;
-  fill: #00A388;
+  background-color: rgba(28, 28, 28, .25);
+  fill: rgba(28, 28, 28, .25);
 }
 .row.infected div:last-child, .layer.infected {
-  background-color: #FFB300;
-  fill: #FFB300;
+  background-color: #009CBF;
+  fill: #009CBF;
 }
 .row.deaths div:last-child, .layer.deaths {
   background-color: #F75F00;
@@ -86,7 +83,7 @@ body {
   stroke: none;
 }
 #axisGroup .tick line {
-  stroke: rgba(28, 28, 28, .25);
+  stroke: rgba(28, 28, 28, .5);
   stroke-dasharray: 3 3
 }
 @media only screen and (min-width: 639px) {
@@ -96,15 +93,11 @@ body {
   #title {
     font-family: "ABCSans Black", "Arial Black", sans-serif;
     font-size: 2rem;
-    color: #009CBF;
     margin: 0 0 2rem 0;
   }
   .row {
     width: 15rem;
     font-size: 1.2rem;
-  }
-  .row:first-child {
-    margin-bottom: 1rem;
   }
   .row div {
     padding: 0 .5rem;
