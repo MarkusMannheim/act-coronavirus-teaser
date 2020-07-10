@@ -99,10 +99,15 @@
           .enter().append("g")
             .attr("class", function(d) { return d.key; })
             .classed("layer", true);
-        layers.selectAll(".bar")
+        layers.selectAll(".area")
             .data(function(d) { return d; })
-          .enter().append("rect")
-            .classed("bar", true);
+          .enter().append("path")
+            .classed("area", true);
+        area = d3.area()
+          .x(function(d) { return x(d.data.date) })
+          .y1(function(d) { return y(d[1]); })
+          .y0(function(d) { return y(d[0]); })
+          .curve(d3.curveBasis);
         for (i = 0; i < 2000; i = i + 250) {
           d3.timeout(resize, i);
         }
@@ -126,11 +131,8 @@
           .tickSizeInner(margin.left + margin.right - width)
           .tickPadding(width < 639 ? -20: -25);
         yAxisGroup.attr("transform", "translate(" + margin.left + ", 0)");
-        d3.selectAll(".bar")
-          .attr("x", function(d) { return x(d.data.date); })
-          .attr("y", function(d) { return y(d[1]); })
-          .attr("width", x.bandwidth())
-          .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+        layers.select(".area")
+          .attr("d", function(d) { return area(d); });
         xAxisGroup.call(xAxis);
         yAxisGroup.call(yAxis);
       }

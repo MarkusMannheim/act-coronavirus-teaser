@@ -29,7 +29,7 @@ async function scrape() {
         recovered: latest[0],
         confirmed: latest[1],
         deaths: latest[2],
-        date: latest[3]
+        date: d3.timeFormat("%-d/%m/%Y")(d3.timeParse("%d/%m/%Y")(latest[3]))
       };
       console.log("scraped latest update:");
       console.log(latest);
