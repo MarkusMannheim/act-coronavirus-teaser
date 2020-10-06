@@ -58,7 +58,7 @@ h1, p {
   font-size: .8rem;
   padding: 0 .5rem;
   width: 100%;
-  border-right: dashed 1px #e6e6e6;
+  border-right: dashed 1px #ccc;
 }
 .statBox:first-child {
   padding-left: 0;
@@ -103,7 +103,8 @@ h1, p {
   opacity: 0;
 }
 .domain {
-  stroke: none;
+  stroke: #e6e6e6;
+  stroke: .5;
 }
 .tick text {
   fill: #333;
