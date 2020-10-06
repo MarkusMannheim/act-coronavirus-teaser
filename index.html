@@ -32,17 +32,41 @@
   <body>
     <!-- initial layout -->
     <div id="container">
-      <div id="header">
-        <h1 id="title">COVID-19 in Canberra</h1>
-        <div id="table">
+      <h1 id="title">COVID-19 in Canberra</h1>
+      <div id="stats">
+        <div class="statBox">
+          <div>
+            <div class="number" id="days"></div>
+          </div>
+          <p>days since last case</p>
+        </div>
+        <div class="statBox">
+          <div>
+            <div class="number" id="active"></div>
+          </div>
+          <p>active cases</p>
+        </div>
+        <div class="statBox">
+        <div>
+          <div class="number" id="total"></div>
+        </div>
+          <p>total cases</p>
+        </div>
+        <div class="statBox">
+          <div>
+            <div class="number" id="deaths"></div>
+          </div>
+          <p>total deaths</p>
         </div>
       </div>
       <svg id="chart">
+        <g id="axisGroup"></g>
+        <defs>
+          <clipPath id="chartClip">
+            <rect></rect>
+          </clipPath>
+        </defs>
         <g id="chartGroup"></g>
-        <g id="axisGroup">
-          <g id="xAxisGroup"></g>
-          <g id="yAxisGroup"></g>
-        </g>
       </svg>
     </div>
     <script>
@@ -61,80 +85,113 @@
           }
           d.infected = d.confirmed - d.recovered - d.deaths;
         });
-        // establish page elements
-        table = d3.select("#table");
-        chart = d3.select("#chart");
-        chartGroup = d3.select("#chartGroup");
-        axisGroup = d3.select("#axisGroup");
-        xAxisGroup = d3.select("#xAxisGroup");
-        yAxisGroup = d3.select("#yAxisGroup");
-        // redraws page when it's resized
-        window.addEventListener("resize", resize);
-        // fill table
-        rows = table
-          .selectAll("row")
-            .data(["confirmed", "infected", "recovered", "deaths"])
-          .enter().append("div")
-            .attr("class", function(d) { return "row " + d; });
-        rows.append("div")
-          .text(function(d) { return d == "confirmed" ? d + " cases:" : d + ":"; });
-        rows.append("div")
-          .text(function(d) { return covidData[covidData.length - 1][d]; });
-        // prepare chart
-        x = d3.scaleBand()
-          .domain(covidData.map(function(d) { return d.date; }))
-          .paddingInner(.15);
-        y = d3.scaleLinear()
-          .domain(d3.extent(covidData, function(d) { return d.confirmed; }));
-        xAxis = d3.axisBottom()
-          .tickSize(0);
-        yAxis = d3.axisLeft()
-          .tickSizeOuter(0)
-          .ticks(4, "2s");
-        stack = d3.stack()
-          .keys(["recovered", "infected", "deaths"].reverse());
-        layers = chartGroup
-          .selectAll(".layer")
-            .data(stack(covidData))
-          .enter().append("g")
-            .attr("class", function(d) { return d.key; })
-            .classed("layer", true);
-        layers.selectAll(".area")
-            .data(function(d) { return d; })
-          .enter().append("path")
-            .classed("area", true);
-        area = d3.area()
-          .x(function(d) { return x(d.data.date) })
-          .y1(function(d) { return y(d[1]); })
-          .y0(function(d) { return y(d[0]); })
-          .curve(d3.curveBasis);
-        for (i = 0; i < 2000; i = i + 250) {
-          d3.timeout(resize, i);
+        // fill stat boxes
+        d3.selectAll(".number")
+          .text(0);
+        days = 0;
+        i = covidData.length - 1;
+        while (i > 0) {
+          if (covidData[i].confirmed == covidData[i - 1].confirmed) {
+            days = days + 1;
+            i = i - 1;
+          } else {
+            break;
+          }
         }
+        d3.select("#days").transition()
+          .duration(2000)
+          .delay(1000)
+          .tween("text", function(d) {
+              let self = this;
+              let i = d3.interpolate(0, days)
+              return function(t) {
+                self.textContent = d3.format(",.0f")(i(t));
+              };
+            });
+        d3.select("#active").transition()
+          .duration(2000)
+          .delay(1000)
+          .tween("text", function(d) {
+              let self = this;
+              let i = d3.interpolate(0, covidData[covidData.length - 1].infected);
+              return function(t) {
+                self.textContent = d3.format(",.0f")(i(t));
+              };
+            });
+        d3.select("#total").transition()
+          .duration(2000)
+          .delay(1000)
+          .tween("text", function(d) {
+              let self = this;
+              let i = d3.interpolate(0, covidData[covidData.length - 1].confirmed);
+              return function(t) {
+                self.textContent = d3.format(",.0f")(i(t));
+              };
+            });
+        d3.select("#deaths").transition()
+          .duration(2000)
+          .delay(1000)
+          .tween("text", function(d) {
+              let self = this;
+              let i = d3.interpolate(0, covidData[covidData.length - 1].deaths);
+              return function(t) {
+                self.textContent = d3.format(",.0f")(i(t));
+              };
+            });
+        // draw chart
+        window.addEventListener("resize", resize);
+        d3.timeout(function() {
+          prepareChart();
+        }, 1000);
       });
       function resize() {
         let dimensions = document.getElementById("chart").getBoundingClientRect();
         width = dimensions.width;
         height = dimensions.height;
-        margin = { top: 0, right: 0, bottom: (width < 638 ? 20 : 30), left: 0};
+        margin = { top: 0, right: 5, bottom: 20, left: 5 };
+        axisTicks = width < 500 ? 4 : 5;
+        axis.ticks(axisTicks, "%b");
+        axisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
+        x.range([margin.left, margin.left]);
+        axisGroup.call(axis);
         x.range([margin.left, width - margin.right]);
-        let xTicks = width > 637  ? 5 : 4;
-        xAxis.scale(d3.scaleTime()
-            .domain(d3.extent(covidData, function(d) { return d.date; }))
-            .range(x.range())
-          )
-          .tickPadding(width == 638 ? 8 : width < 639 ? 10 : 15)
-          .ticks(xTicks, "%b");
-        xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
+        axisGroup.transition()
+          .duration(2000)
+          .style("opacity", 1)
+          .call(axis);
+        chartClip.select("rect")
+          .attr("x", margin.left)
+          .attr("y", margin.top)
+          .attr("height", height - margin.top - margin.bottom)
+          .attr("width", 0)
+          .transition()
+            .duration(2000)
+            .delay(1000)
+            .attr("width", width - margin.right - margin.left);
         y.range([height - margin.bottom, margin.top]);
-        yAxis.scale(y)
-          .tickSizeInner(margin.left + margin.right - width)
-          .tickPadding(width < 639 ? -20: -25);
-        yAxisGroup.attr("transform", "translate(" + margin.left + ", 0)");
-        layers.select(".area")
-          .attr("d", function(d) { return area(d); });
-        xAxisGroup.call(xAxis);
-        yAxisGroup.call(yAxis);
+        plot.attr("d", area(covidData));
+      }
+      function prepareChart() {
+        x = d3.scaleTime()
+          .domain(d3.extent(covidData.map(function(d) { return d.date; })));
+        y = d3.scaleLinear()
+          .domain(d3.extent(covidData, function(d) { return d.infected; }));
+        axis = d3.axisBottom(x)
+          .tickSize(0)
+          .tickPadding(8);
+        axisGroup = d3.select("#axisGroup");
+        chartGroup = d3.select("#chartGroup");
+        chartClip = d3.select("#chartClip");
+        chart = d3.select("#chart");
+        plot = chartGroup
+          .append("path")
+            .attr("id", "plot");
+        area = d3.area()
+          .x(function(d) { return x(d.date) })
+          .y1(function(d) { return y(d.infected); })
+          .y0(function(d) { return height; })
+          .curve(d3.curveBasis);
+        resize();
       }
     </script>
   </body>
