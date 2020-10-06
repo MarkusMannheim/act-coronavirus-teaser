@@ -136,4 +136,7 @@ h1, p {
   .tick text {
     font-size: .75rem;
   }
+  #container {
+    padding: 1rem;
+  }
 }
