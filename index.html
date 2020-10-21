@@ -99,8 +99,8 @@
           }
         }
         d3.select("#days").transition()
-          .duration(2000)
-          .delay(1000)
+          .duration(1000)
+          .delay(500)
           .tween("text", function(d) {
               let self = this;
               let i = d3.interpolate(0, days)
@@ -109,8 +109,8 @@
               };
             });
         d3.select("#active").transition()
-          .duration(2000)
-          .delay(1000)
+          .duration(1000)
+          .delay(500)
           .tween("text", function(d) {
               let self = this;
               let i = d3.interpolate(0, covidData[covidData.length - 1].infected);
@@ -120,7 +120,7 @@
             });
         d3.select("#total").transition()
           .duration(2000)
-          .delay(1000)
+          .delay(500)
           .tween("text", function(d) {
               let self = this;
               let i = d3.interpolate(0, covidData[covidData.length - 1].confirmed);
@@ -130,7 +130,7 @@
             });
         d3.select("#deaths").transition()
           .duration(2000)
-          .delay(1000)
+          .delay(500)
           .tween("text", function(d) {
               let self = this;
               let i = d3.interpolate(0, covidData[covidData.length - 1].deaths);
@@ -142,7 +142,7 @@
         window.addEventListener("resize", resize);
         d3.timeout(function() {
           prepareChart();
-        }, 1000);
+        }, 500);
       });
       function resize() {
         let dimensions = document.getElementById("chart").getBoundingClientRect();
@@ -156,7 +156,7 @@
         axisGroup.call(axis);
         x.range([margin.left, width - margin.right]);
         axisGroup.transition()
-          .duration(2000)
+          .duration(500)
           .style("opacity", 1)
           .call(axis);
         chartClip.select("rect")
@@ -166,7 +166,7 @@
           .attr("width", 0)
           .transition()
             .duration(2000)
-            .delay(1000)
+            .delay(500)
             .attr("width", width - margin.right - margin.left);
         y.range([height - margin.bottom, margin.top]);
         plot.attr("d", area(covidData));
