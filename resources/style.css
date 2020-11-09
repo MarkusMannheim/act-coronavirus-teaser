@@ -45,7 +45,7 @@ h1, p {
   margin: 0;
 }
 #title {
-  font-family: "ABSCSans Black", "Arial Black", sans-serif;
+  font-family: "ABCSans Black", "Arial Black", sans-serif;
   font-size: 1rem;
   padding-bottom: .5rem;
 }
@@ -78,7 +78,7 @@ h1, p {
   box-shadow: 1px 1px 3px #333;
   font-size: 1.25rem;
   line-height: 3rem;
-  font-family: "ABSCSans Black", "Arial Black", sans-serif;
+  font-family: "ABCSans Black", "Arial Black", sans-serif;
 }
 .statBox p {
   padding-top: .5rem;
