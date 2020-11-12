@@ -38,7 +38,7 @@
           <div>
             <div class="number" id="days"></div>
           </div>
-          <p>days since last case</p>
+          <p>days free of disease</p>
         </div>
         <div class="statBox">
           <div>
@@ -73,17 +73,17 @@
       // load scraped data (with in-built cache refresh)
       d3.csv("./resources/actData.csv?randomKey=" + Math.floor(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
+        console.log(data);
         covidData = data;
         // format data
         covidData.forEach(function(d) {
           for (key in d) {
             if (key == "date") {
-              d.date = d3.timeParse("%d/%m/%Y")(d.date);
+              d.date = new Date(d.date);
             } else {
               d[key] = +d[key];
             }
           }
-          d.infected = d.confirmed - d.recovered - d.deaths;
         });
         // fill stat boxes
         d3.selectAll(".number")
@@ -91,11 +91,11 @@
         days = 0;
         i = covidData.length - 1;
         while (i > 0) {
-          if (covidData[i].confirmed == covidData[i - 1].confirmed) {
+          if (covidData[i].active > 0) {
+            break;
+          } else {
             days = days + 1;
             i = i - 1;
-          } else {
-            break;
           }
         }
         d3.select("#days").transition()
@@ -113,7 +113,7 @@
           .delay(500)
           .tween("text", function(d) {
               let self = this;
-              let i = d3.interpolate(0, covidData[covidData.length - 1].infected);
+              let i = d3.interpolate(0, covidData[covidData.length - 1].active);
               return function(t) {
                 self.textContent = d3.format(",.0f")(i(t));
               };
@@ -175,7 +175,7 @@
         x = d3.scaleTime()
           .domain(d3.extent(covidData.map(function(d) { return d.date; })));
         y = d3.scaleLinear()
-          .domain(d3.extent(covidData, function(d) { return d.infected; }));
+          .domain(d3.extent(covidData, function(d) { return d.active; }));
         axis = d3.axisBottom(x)
           .tickSize(0)
           .tickPadding(8);
@@ -188,7 +188,7 @@
             .attr("id", "plot");
         area = d3.area()
           .x(function(d) { return x(d.date) })
-          .y1(function(d) { return y(d.infected); })
+          .y1(function(d) { return y(d.active); })
           .y0(function(d) { return height; })
           .curve(d3.curveBasis);
         resize();
