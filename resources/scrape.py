@@ -49,4 +49,4 @@ if date > data.iloc[-1]["date"]:
 else:
     print("No new data available")
 
-driver.close()
+driver.quit()
