@@ -73,7 +73,6 @@
       // load scraped data (with in-built cache refresh)
       d3.csv("./resources/actData.csv?randomKey=" + Math.floor(Math.random() * 9000) + 1000, function(error, data) {
         if (error) throw error;
-        console.log(data);
         covidData = data;
         // format data
         covidData.forEach(function(d) {
