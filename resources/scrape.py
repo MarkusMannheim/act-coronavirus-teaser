@@ -12,27 +12,26 @@ data["date"] = pd.to_datetime(data["date"], format="%Y-%m-%d")
 
 # use a headless browser (saves time)
 chrome_options = Options()
-chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--headless")
 
 # set up the browser
 driver = webdriver.Chrome(options=chrome_options)
 
-# attempt to reach dashboard
+# navigate to data
 driver.get("https://www.covid19.act.gov.au/")
-time.sleep(10)
-driver.find_element_by_css_selector(".current-status_container a").click()
-# check if dashboard opens
-time.sleep(5)
-driver.switch_to.window(driver.window_handles[-1])
-time.sleep(5)
-cards = driver.find_elements_by_css_selector(".visual-card svg tspan")
+driver.maximize_window()
+data_card = WebDriverWait(driver, 10).until(
+    EC.visibility_of_element_located((By.CLASS_NAME, "spf-article-card--tabular"))
+)
+
 # extract values
-recovered = cards[0].get_attribute("textContent")
-confirmed = cards[2].get_attribute("textContent")
-deaths = cards[4].get_attribute("textContent")
-date = cards[6].get_attribute("textContent")
+data_table = data_card.find_element_by_class_name("spf-article-card--tabular-table")
+active = data_table.find_element_by_css_selector(".col-lg-4 table td:nth-child(2)").get_attribute("innerText").strip()[:-7]
+confirmed = data_table.find_element_by_css_selector(".col-lg-4 table td:last-child").get_attribute("innerText").strip()[:-6]
+recovered = data_table.find_element_by_css_selector(".col-lg-4:last-child table td:last-child").get_attribute("innerText").strip()
+deaths = "3"
+date = data_card.find_element_by_css_selector(".spf-article-card--tabular-subtitle p").get_attribute("innerText")[-10:]
 date = pd.to_datetime(date, format="%d/%m/%Y")
-active = cards[7].get_attribute("textContent")
 
 # if data is new, add it to file
 if date > data.iloc[-1]["date"]:
