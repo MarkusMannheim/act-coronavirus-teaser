@@ -116,7 +116,12 @@
               return function(t) {
                 self.textContent = d3.format(",.0f")(i(t));
               };
-            });
+            })
+           .each(function(d) {
+              if (covidData[covidData.length - 1].active == 1) {
+                 this.parentNode.parentNode.querySelector("p").innerText = "active case";
+              }
+           });
         d3.select("#total").transition()
           .duration(2000)
           .delay(500)
