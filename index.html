@@ -107,6 +107,8 @@
                 self.textContent = d3.format(",.0f")(i(t));
               };
             });
+        // check grammar
+        if (days == 1) document.querySelector(".statBox p").innerText = "day free of disease";
         d3.select("#active").transition()
           .duration(1000)
           .delay(500)
