@@ -154,7 +154,7 @@
         let dimensions = document.getElementById("chart").getBoundingClientRect();
         width = dimensions.width;
         height = dimensions.height;
-        margin = { top: 0, right: 5, bottom: 20, left: 5 };
+        margin = { top: 0, right: 10, bottom: 20, left: 10 };
         axisTicks = width < 500 ? 4 : 5;
         axis.ticks(axisTicks, "%b");
         axisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
