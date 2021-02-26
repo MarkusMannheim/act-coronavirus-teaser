@@ -6,6 +6,5 @@ ECHO Recording changes ...
 git add ..\*.*
 git commit -m "scheduled update"
 git push
-ECHO
 ECHO Update complete
-exit
+exit /b
