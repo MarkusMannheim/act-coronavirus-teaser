@@ -9,4 +9,4 @@ git commit -m "scheduled update"
 git push
 ECHO.
 ECHO Update complete
-cmd /c
+exit
