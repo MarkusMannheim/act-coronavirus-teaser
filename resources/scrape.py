@@ -49,4 +49,4 @@ else:
     print("No new data available")
 
 driver.quit()
-exit()
+quit()
