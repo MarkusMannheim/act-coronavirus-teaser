@@ -5,4 +5,5 @@ start /b /wait py ./scrape.py
 git add ..\*.*
 git commit -m "scheduled update"
 git push
+timeout 5 >nul
 exit
