@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155991615-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "UA-155991615-1");
+    </script>
+    <!-- my stuff -->
+    <meta charset="utf-8">
+    <title>COVID-19 state comparison</title>
+    <meta name="description" content="Comparing COVID-19 cases in Australian states and territories.">
+    <meta name="keywords" content="coronavirus, australia, states, territories, canberra, act, covid19">
+    <meta name="author" content="Markus Mannheim">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <link href="./resources/comparison.css" rel="stylesheet">
+    <link href="./resources/abcLogo64.png" rel="icon">
+    <!-- page data for scrapers -->
+    <meta property="og:title" content="COVID-19 state comparison">
+    <meta property="og:description" content="Comparing COVID-19 cases in Australian states and territories.">
+    <meta property="og:image" content="https://markusmannheim.github.io/act-coronavirus-teaser/resources/actCurve.jpg">
+    <meta property="og:url" content="https://markusmannheim.github.io/act-coronavirus-teaser/comparison.html">
+    <meta property="og:type" content="website">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:site" content="@MarkusMannheim">
+    <meta property="twitter:creator" content="@MarkusMannheim">
+  </head>
+  <body>
+    <!-- initial layout -->
+    <div id="container">
+      <h1 id="title">Cases per 100,000 residents</h1>
+      <svg id="chart">
+        <g id="chartGroup"></g>
+        <g id="axisGroup"></g>
+      </svg>
+    </div>
+    <script>
+      // load scraped data (with in-built cache refresh)
+      d3.csv("./resources/comparison.csv?randomKey=" + Math.floor(Math.random() * 9000) + 1000)
+        .then(function(data) {
+          // format data
+          covidData = data
+            .map(function(d) {
+              return {
+                area: d.area,
+                cases: +d.cases,
+                population: +d.population,
+                perCapita: +d.cases / +d.population * 100000
+              };
+            });
+          covidData.sort(function(a, b) {
+            return d3.descending(a.perCapita, b.perCapita);
+          });
+          // draw chart
+          window.addEventListener("resize", resize);
+          d3.timeout(function() {
+            prepareChart();
+          }, 500);
+        });
+      function resize() {
+        let dimensions = document.getElementById("chart").getBoundingClientRect();
+        width = dimensions.width;
+        height = dimensions.height;
+        margin = { top: 0, right: 0, bottom: 15, left: 40 };
+        axisTicks = width < 500 ? 4 : 5;
+        axis.ticks(axisTicks, "1s")
+          .tickSizeOuter(0)
+          .tickSizeInner(margin.top + margin.bottom - height);
+        axisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
+        x.range([margin.left, margin.left]);
+        y.range([margin.top, height - margin.bottom]);
+        backgrounds.attr("x", margin.left)
+          .attr("y", function(d) { return y(d.area); })
+          .attr("width", 0)
+          .attr("height", y.bandwidth())
+          .transition()
+            .duration(500)
+            .attr("width", width - margin.left - margin.right);
+        axisGroup.call(axis);
+        x.range([margin.left, width - margin.right - 30]);
+        bars.attr("x", margin.left)
+          .attr("y", function(d) { return y(d.area); })
+          .attr("width", 0)
+          .attr("height", y.bandwidth())
+          .transition()
+            .delay(function(d, i) { return i * 1000 / 8 + 250; })
+            .duration(1000)
+            .attr("width", function(d) { return x(d.perCapita) - x(0); });
+        labels.attr("x", margin.left - 5)
+          .attr("y", function(d) { return y(d.area) + y.bandwidth() - 5; });
+        values.attr("x", margin.left + 5)
+          .attr("y", function(d) { return y(d.area) + y.bandwidth() - 5; });
+        values.transition()
+          .delay(function(d, i) { return i * 1000 / 8; })
+            .style("opacity", 1)
+          .transition()
+            .duration(1000)
+            .attr("x", function(d) { return x(d.perCapita) + 5; })
+            .textTween(function(d) {
+              let i = d3.interpolate(0, d.perCapita);
+              return function(t) {
+                return d3.format(".1f")(i(t));
+              };
+            });
+        d3.selectAll("#axisGroup, .label").transition()
+          .duration(500)
+          .style("opacity", 1)
+          .call(axis);
+      }
+      function prepareChart() {
+        x = d3.scaleLinear()
+          .domain([0, d3.max(covidData, function(d) { return d.perCapita; })]).nice();
+        y = d3.scaleBand()
+          .domain(covidData.map(function(d) { return d.area; }))
+          .padding(0.2);
+        axis = d3.axisBottom(x)
+          .tickSize(0);
+        axisGroup = d3.select("#axisGroup");
+        chartGroup = d3.select("#chartGroup");
+        chart = d3.select("#chart");
+        areas = chartGroup
+          .selectAll(".area")
+            .data(covidData)
+          .enter().append("g")
+            .classed("area", true)
+            .attr("id", function(d) { return d.area; });
+        backgrounds = areas
+          .append("rect")
+            .classed("background", true);
+        bars = areas
+          .append("rect")
+            .classed("bar", true);
+        labels = areas
+          .append("text")
+            .classed("label", true)
+            .text(function(d) { return d.area; });
+        values = areas
+          .append("text")
+            .classed("value", true)
+            .text("0.0");
+        resize();
+      }
+    </script>
+  </body>
+</html>
