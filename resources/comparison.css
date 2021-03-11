@@ -59,7 +59,7 @@ h1, p {
   stroke: none;
 }
 .tick text {
-  fill: #666;
+  fill: #999;
   font-size: .7rem;
 }
 .tick line {
