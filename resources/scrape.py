@@ -13,7 +13,7 @@ data["date"] = pd.to_datetime(data["date"], format="%Y-%m-%d")
 # use a headless browser (saves time)
 chrome_options = Options()
 chrome_options.add_argument("start-maximized");
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 
 # set up the browser
 driver = webdriver.Chrome(options=chrome_options)
