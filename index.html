@@ -9,195 +9,222 @@
       gtag("js", new Date());
       gtag("config", "UA-155991615-1");
     </script>
+
     <!-- my stuff -->
     <meta charset="utf-8">
-    <title>COVID-19 in Canberra</title>
-    <meta name="description" content="Tracking the ACT's confirmed COVID-19 cases and outcomes.">
-    <meta name="keywords" content="coronavirus, australia, canberra, act, virus, corona, covid-19, covid19, disease, spread, infection">
+    <title>ACT COVID-19 snapshot</title>
     <meta name="author" content="Markus Mannheim">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <!-- initial scripts -->
+    <script src="./resources/d3.v6.min.js"></script>
+    <script src="./resources/topojson.v3.min.js"></script>
     <link href="./resources/style.css" rel="stylesheet">
     <link href="./resources/abcLogo64.png" rel="icon">
-    <!-- page data for scrapers -->
-    <meta property="og:title" content="COVID-19 in Canberra">
-    <meta property="og:description" content="Tracking the ACT's confirmed COVID-19 cases and outcomes.">
-    <meta property="og:image" content="https://markusmannheim.github.io/act-coronavirus-teaser/resources/actCurve.jpg">
-    <meta property="og:url" content="https://markusmannheim.github.io/act-coronavirus-teaser/">
-    <meta property="og:type" content="website">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:site" content="@MarkusMannheim">
-    <meta property="twitter:creator" content="@MarkusMannheim">
   </head>
+
   <body>
-    <!-- initial layout -->
-    <div id="container">
-      <h1 id="title">COVID-19 in Canberra</h1>
-      <div id="stats">
-        <div class="statBox">
-          <div>
-            <div class="number" id="days"></div>
+    <container id="container">
+      <div id="top">
+        <div id="topContainer">
+          <div id="header">
+            <h1>ACT COVID-19 SNAPSHOT</h1>
+            <p>last updated <span id="date"></span>*</p>
           </div>
-          <p>days free of disease</p>
-        </div>
-        <div class="statBox">
-          <div>
-            <div class="number" id="active"></div>
+          <div id="counts">
+            <div id="newCases" class="count">
+              <div class="box"></div>
+              <div>new cases</div>
+            </div>
+            <div id="activeCases" class="count">
+              <div class="box"></div>
+              <div>active cases</div>
+            </div>
+            <div id="daysSince" class="count">
+              <div class="box"></div>
+              <div>days since last case</div>
+            </div>
           </div>
-          <p>active cases</p>
-        </div>
-        <div class="statBox">
-        <div>
-          <div class="number" id="total"></div>
-        </div>
-          <p>total cases</p>
-        </div>
-        <div class="statBox">
-          <div>
-            <div class="number" id="deaths"></div>
+          <hr>
+          <div id="chartHead">
+            Vaccinations among Canberrans aged 16+:
           </div>
-          <p>deaths</p>
         </div>
+        <svg id="icon"></svg>
       </div>
       <svg id="chart">
-        <g id="axisGroup"></g>
-        <defs>
-          <clipPath id="chartClip">
-            <rect></rect>
-          </clipPath>
-        </defs>
         <g id="chartGroup"></g>
+        <g id="axisGroup">
+          <g id="xAxisGroup" class="axis"></g>
+          <g id="yAxisGroup" class="axis"></g>
+        </g>
       </svg>
-    </div>
+      <div id="keys">
+        <div class="key one"><span></span>at least one dose</div>
+        <div class="key two"><span></span>two doses</div>
+      </div>
+      <div id="footer">
+        Note: Vaccination reports usually have a two-day lag.
+        The ABC has smoothed some past vaccination counts to address erroneous and missing government data.
+        Population based on June&#160;2020 estimates.
+        Sources: ACT Health, Commonwealth Department of Health, covidlive.com.au, ABS
+      </div>
+    </container>
+
     <script>
-      // load scraped data (with in-built cache refresh)
-      d3.csv("./resources/actData.csv?randomKey=" + Math.floor(Math.random() * 9000) + 1000, function(error, data) {
-        if (error) throw error;
-        covidData = data;
-        // format data
-        covidData.forEach(function(d) {
-          for (key in d) {
-            if (key == "date") {
-              d.date = new Date(d.date);
-            } else {
-              d[key] = +d[key];
-            }
-          }
-        });
-        // fill stat boxes
-        d3.selectAll(".number")
-          .text(0);
-        days = 0;
-        i = covidData.length - 1;
-        while (i > 0) {
-          if (covidData[i].active > 0) {
-            break;
-          } else {
-            days = days + 1;
-            i = i - 1;
-          }
-        }
-        d3.select("#days").transition()
-          .duration(1000)
-          .delay(500)
-          .tween("text", function(d) {
-              let self = this;
-              let i = d3.interpolate(0, days)
-              return function(t) {
-                self.textContent = d3.format(",.0f")(i(t));
-              };
-            });
-        // check grammar
-        if (days == 1) document.querySelector(".statBox p").innerText = "day free of disease";
-        d3.select("#active").transition()
-          .duration(1000)
-          .delay(500)
-          .tween("text", function(d) {
-              let self = this;
-              let i = d3.interpolate(0, covidData[covidData.length - 1].active);
-              return function(t) {
-                self.textContent = d3.format(",.0f")(i(t));
-              };
-            })
-           .each(function(d) {
-              if (covidData[covidData.length - 1].active == 1) {
-                 this.parentNode.parentNode.querySelector("p").innerText = "active case";
+      // page elements
+      top = d3.select("#top");
+      topContainer = d3.select("#topContainer");
+      header = d3.select("#header");
+      date = d3.select("#date");
+      counts = d3.select("#counts");
+      newCases = d3.select("#newCases");
+      activeCases = d3.select("#activeCases");
+      daysSince = d3.select("#daysSince");
+      counts = d3.select("#counts");
+      icon = d3.select("#icon");
+      chartHead = d3.select("#chartHead");
+      chart = d3.select("#chart");
+      chartGroup = d3.select("#chartGroup");
+      xAxisGroup = d3.select("#xAxisGroup");
+      yAxisGroup = d3.select("#yAxisGroup");
+      keys = d3.select("#keys");
+      footer = d3.select("#footer");
+
+      // load LGA data
+      Promise.all([
+        d3.csv("./data/data.csv"),
+        d3.json("./data/act.topojson"),
+      ])
+        .then(function(data) {
+
+          // data
+          covidData = data[0]
+            .map(function(d) {
+              d.date = d3.timeParse("%Y-%m-%d")(d.date);
+              let keys = Object.keys(d);
+              for (i = 1; i < keys.length; i++) {
+                d[keys[i]] = +d[keys[i]];
               }
-           });
-        d3.select("#total").transition()
-          .duration(2000)
-          .delay(500)
-          .tween("text", function(d) {
-              let self = this;
-              let i = d3.interpolate(0, covidData[covidData.length - 1].confirmed);
-              return function(t) {
-                self.textContent = d3.format(",.0f")(i(t));
+              return d;
+            });
+
+          // draw map
+          mapData = topojson.feature(data[1], data[1].objects.areas);
+          projection = d3.geoConicEqualArea()
+            .parallels([-26.293056, -44.293056])
+            .rotate([-149.126944, 0]);
+          path = d3.geoPath()
+            .projection(projection);
+          map = icon
+            .append("path")
+              .attr("id", "map");
+
+          // update date
+          date.text(d3.timeFormat("%b %-d, %Y")(covidData[covidData.length - 1].date));
+
+          // update counts
+          newCases.select(".box")
+            .text(covidData[covidData.length - 1].new);
+          activeCases.select(".box")
+            .text(covidData[covidData.length - 1].total - covidData[covidData.length - 1].dead - covidData[covidData.length - 1].recovered);
+          lastDay = function() {
+            let day=0;
+            while (true) {
+              if (covidData.map(d => d.new)[covidData.length - 1 - day] > 0) {
+                break;
+              } else {
+                day = day + 1;
+              }
+            }
+            return day;
+          }
+          daysSince.select(".box")
+            .text(lastDay);
+
+          // chartData
+          chartData = covidData
+            .filter(function(d) {
+              return d.one > 0;
+            })
+            .map(function(d) {
+              return {
+                date: d.date,
+                one: d.one,
+                two: d.two
               };
             });
-        d3.select("#deaths").transition()
-          .duration(2000)
-          .delay(500)
-          .tween("text", function(d) {
-              let self = this;
-              let i = d3.interpolate(0, covidData[covidData.length - 1].deaths);
-              return function(t) {
-                self.textContent = d3.format(",.0f")(i(t));
-              };
-            });
-        // draw chart
-        window.addEventListener("resize", resize);
-        d3.timeout(function() {
-          prepareChart();
-        }, 500);
-      });
+          stackedData = d3.stack()
+            .keys(["two", "one"])
+            (chartData);
+          area = d3.area()
+            .x(function(d) { return x(d.data.date); })
+            .y1(function(d) { return y(d[1]); })
+            .y0(function(d) { return y(d[0]); });
+
+          // prepare chart
+          margin = {
+            top: 10,
+            right: 5,
+            bottom: 30,
+            left: 30
+          };
+          x = d3.scaleTime()
+            .domain(d3.extent(chartData.map(function(d) {
+              return d.date;
+            })));
+          y = d3.scaleLinear()
+            .domain(d3.extent(chartData.map(function(d) {
+              return d.one + d.two;
+            }))).nice();
+          xAxis = d3.axisBottom(x)
+            .tickSizeOuter(0)
+            .ticks(4, "%b");
+          yAxis = d3.axisLeft(y)
+            .tickSizeOuter(0)
+            .ticks(3, ".0%")
+            .tickPadding(5);
+          areas = chartGroup
+            .selectAll(".area")
+              .data(stackedData)
+            .enter().append("path")
+              .attr("class", function(d) {
+                return "area " + d.key;
+              });
+          keys.select(".key.one span")
+            .text(d3.format(".1%")(chartData[chartData.length - 1].one + chartData[chartData.length - 1].two));
+          keys.select(".key.two span")
+            .text(d3.format(".1%")(chartData[chartData.length - 1].two));
+
+          // fade in; calculate chart dimensions
+          d3.timeout(function() {
+            window.addEventListener("resize", resize);
+            resize();
+            d3.selectAll("#counts, #chart, #icon, #chartHead, #keys")
+              .transition()
+                .duration(500)
+                .style("opacity", 1);
+          }, 1000);
+        });
+
       function resize() {
-        let dimensions = document.getElementById("chart").getBoundingClientRect();
-        width = dimensions.width;
-        height = dimensions.height;
-        margin = { top: 0, right: 10, bottom: 20, left: 10 };
-        axisTicks = width < 500 ? 4 : 5;
-        axis.ticks(axisTicks, "%b");
-        axisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
-        x.range([margin.left, margin.left]);
-        axisGroup.call(axis);
+        chartDimensions = document.getElementById("chart").getBoundingClientRect();
+        mapDimensions = document.getElementById("icon").getBoundingClientRect();
+        width = chartDimensions.width;
+        height = chartDimensions.height;
         x.range([margin.left, width - margin.right]);
-        axisGroup.transition()
-          .duration(500)
-          .style("opacity", 1)
-          .call(axis);
-        chartClip.select("rect")
-          .attr("x", margin.left)
-          .attr("y", margin.top)
-          .attr("height", height - margin.top - margin.bottom)
-          .attr("width", 0)
-          .transition()
-            .duration(2000)
-            .delay(500)
-            .attr("width", width - margin.right - margin.left);
         y.range([height - margin.bottom, margin.top]);
-        plot.attr("d", area(covidData));
-      }
-      function prepareChart() {
-        x = d3.scaleTime()
-          .domain(d3.extent(covidData.map(function(d) { return d.date; })));
-        y = d3.scaleLinear()
-          .domain(d3.extent(covidData, function(d) { return d.active; }));
-        axis = d3.axisBottom(x)
-          .tickSize(0)
-          .tickPadding(8);
-        axisGroup = d3.select("#axisGroup");
-        chartGroup = d3.select("#chartGroup");
-        chartClip = d3.select("#chartClip");
-        chart = d3.select("#chart");
-        plot = chartGroup
-          .append("path")
-            .attr("id", "plot");
-        area = d3.area()
-          .x(function(d) { return x(d.date) })
-          .y1(function(d) { return y(d.active); })
-          .y0(function(d) { return height; })
-          .curve(d3.curveBasis);
-        resize();
+        yAxis.tickSizeInner(margin.left + margin.right - width);
+        xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")")
+          .call(xAxis);
+        yAxisGroup.attr("transform", "translate(" + (margin.left) + ", 0)")
+          .call(yAxis);
+        keys.style("left", (margin.left + 16) + "px")
+          .style("top", (chartDimensions.top + margin.top) + "px");
+        areas.attr("d", area);
+        icon.style("width", (mapDimensions.height * 118 / 150) + "px");
+        projection.fitHeight(mapDimensions.height - 8, mapData);
+        map.attr("d", path(mapData));
       }
     </script>
   </body>
