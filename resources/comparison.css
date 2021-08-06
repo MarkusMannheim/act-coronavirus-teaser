@@ -1,0 +1,101 @@
+/* colours
+blue: #009CBF
+orange: #F75F00
+green: #00A388
+--tint-1: #333;
+--tint-2: #666;
+--tint-3: #999;
+--tint-4: #ccc;
+--tint-5: #e6e6e6;
+--tint-6: #f2f2f2;
+ */
+@font-face {
+  font-family: "ABCSans Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: local("ABCSans Regular"), url("./abcsans-regular.woff") format("woff");
+}
+@font-face {
+  font-family: "ABCSans Black";
+  font-style: normal;
+  font-weight: normal;
+  src: local("ABCSans Black"), url("./abcsans-black.woff") format("woff");
+}
+:root {
+  font-size: 1em;
+  font-family: "ABCSans Regular", "Arial", sans-serif;
+  color: #333;
+}
+body {
+  overflow: hidden;
+}
+#container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: .5rem;
+  margin-bottom: .5rem;
+  border: solid .5px #e6e6e6;
+  display: flex;
+  flex-flow: column;
+}
+h1, p {
+  margin: 0;
+}
+#title {
+  font-family: "ABCSans Black", "Arial Black", sans-serif;
+  font-size: 1rem;
+  padding-bottom: .5rem;
+}
+#chart {
+  height: 100%;
+}
+#axisGroup {
+  opacity: 0;
+}
+.domain {
+  stroke: none;
+}
+.tick text {
+  fill: #999;
+  font-size: .7rem;
+}
+.tick line {
+  stroke: white;
+}
+.background {
+  fill: #f2f2f2;
+}
+.bar {
+  fill: #009CBF;
+}
+#ACT .bar {
+  fill: #00A388;
+}
+.label, .value {
+  text-anchor: end;
+  font-size: .8rem;
+  fill: #666;
+  opacity: 0;
+}
+.value {
+  fill: #999;
+  text-anchor: start;
+  font-family: "ABCSans Black", "Arial Black", sans-serif;
+}
+@media only screen and (min-width: 500px) {
+  #title {
+    font-size: 1.2rem;
+  }
+  .tick text {
+    font-size: .75rem;
+  }
+  #container {
+    padding: 1rem;
+  }
+  .label, .value {
+    font-size: .85rem;
+  }
+}
