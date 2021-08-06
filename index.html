@@ -198,9 +198,9 @@
                 return "area " + d.key;
               });
           keys.select(".key.one div")
-            .text(d3.format(".1%")(chartData[chartData.length - 1].one + chartData[chartData.length - 1].two));
+            .text(d3.format(".0%")(chartData[chartData.length - 1].one + chartData[chartData.length - 1].two));
           keys.select(".key.two div")
-            .text(d3.format(".1%")(chartData[chartData.length - 1].two));
+            .text(d3.format(".0%")(chartData[chartData.length - 1].two));
 
           // fade in; calculate chart dimensions
           d3.timeout(function() {
