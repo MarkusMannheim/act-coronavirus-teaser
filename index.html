@@ -60,8 +60,14 @@
         </g>
       </svg>
       <div id="keys">
-        <div class="key one"><span></span>at least one dose</div>
-        <div class="key two"><span></span>two doses</div>
+        <div class="key one">
+          <div></div>
+          <div>at least one dose</div>
+        </div>
+        <div class="key two">
+          <div></div>
+          <div>two doses</div>
+        </div>
       </div>
       <div id="footer">
         Note: Vaccination reports usually have a two-day lag.
@@ -191,9 +197,9 @@
               .attr("class", function(d) {
                 return "area " + d.key;
               });
-          keys.select(".key.one span")
+          keys.select(".key.one div")
             .text(d3.format(".1%")(chartData[chartData.length - 1].one + chartData[chartData.length - 1].two));
-          keys.select(".key.two span")
+          keys.select(".key.two div")
             .text(d3.format(".1%")(chartData[chartData.length - 1].two));
 
           // fade in; calculate chart dimensions

@@ -143,21 +143,26 @@ hr {
   position: absolute;
 }
 .key {
-  font-size: 1rem;
+  font-size: .95rem;
+  display: flex;
+  line-height: 3rem;
 }
 .key:first-child {
   margin-bottom: .5rem;
 }
-.key span {
+.key div:first-child {
   font-family: "ABC Sans Nova Black", "Arial Black", sans-serif;
-  padding: 2px;
   color: white;
   margin-right: .25rem;
+  height: 3rem;
+  width: 3rem;
+  text-align: center;
+  border-radius: 50%;
 }
-.key.one span {
+.key.one div:first-child {
   background: #009CBF
 }
-.key.two span {
+.key.two div:first-child {
   background: #00A388;
 }
 @media only screen and (max-width: 500px) {
@@ -200,6 +205,14 @@ hr {
     font-size: .65rem;
   }
   .key {
-    font-size: .9rem;
+    font-size: .8rem;
+    line-height: 2.5rem;
+  }
+  .key:first-child {
+    margin-bottom: .25rem;
+  }
+  .key div:first-child {
+    height: 2.5rem;
+    width: 2.5rem;
   }
 }
