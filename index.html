@@ -99,7 +99,7 @@
 
       // load LGA data
       Promise.all([
-        d3.csv("./data/data.csv"),
+        d3.csv("./data/data.csv?randomKey=" + Math.round(Math.random()*9000)),
         d3.json("./data/act.topojson"),
       ])
         .then(function(data) {
