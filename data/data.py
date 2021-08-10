@@ -29,7 +29,7 @@ driver.close()
 driver.quit()
 
 data = pd.read_csv("./case_data.csv")
-data["date"] = pd.to_datetime(data["date"], format="%d/%m/%Y")
+data["date"] = pd.to_datetime(data["date"], format="%Y/%m/%d")
 data.sort_values("date", ascending=True, inplace=True)
 data.fillna(0, inplace=True)
 data["new"] = data["new"].astype("float")
