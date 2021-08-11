@@ -1,5 +1,9 @@
 @ECHO off
 TITLE ACT COVID-19 update
+ECHO Resetting data ...
+git fetch --all
+git reset --hard origin/gh-pages
+ECHO.
 ECHO Commencing scrape ...
 start /w /b py ./check_act.py
 ECHO.
