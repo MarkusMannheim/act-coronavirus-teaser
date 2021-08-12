@@ -132,8 +132,16 @@
           // update counts
           newCases.select(".box")
             .text(covidData[covidData.length - 1].new);
+          if (covidData[covidData.length - 1].new == 1) {
+            newCases.select("div:last-child")
+              .text("new case");
+          }
           activeCases.select(".box")
             .text(covidData[covidData.length - 1].total - covidData[covidData.length - 1].dead - covidData[covidData.length - 1].recovered);
+          if (covidData[covidData.length - 1].total - covidData[covidData.length - 1].dead - covidData[covidData.length - 1].recovered == 1) {
+            activeCases.select("div:last-child")
+              .text("active case");
+          }
           lastDay = function() {
             let day=0;
             while (true) {
