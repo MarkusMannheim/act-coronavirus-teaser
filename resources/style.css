@@ -1,25 +1,25 @@
 /* b: #009CBF o: #F75F00 g: #00A388 --tint-1: #333; --tint-2: #666; --tint-3: #999; --tint-4: #ccc; --tint-5: #e6e6e6; --tint-6: #f2f2f2; */
 @font-face {
- font-family: "ABCSansNova Regular";
+ font-family: "ABC Sans Nova Regular";
  font-style: normal;
  font-weight: normal;
- src: local("ABCSansNova Regular"), url("../fonts/ABCSansNova-Regular.otf") format("otf");
+ src: local("ABC Sans Nova Regular"), url("../fonts/ABCSansNova-Regular.otf") format("otf");
 }
 @font-face {
- font-family: "ABCSansNova Black";
+ font-family: "ABC Sans Nova Black";
  font-style: normal;
  font-weight: normal;
- src: local("ABCSansNova Black"), url("../fonts/ABCSansNova-Black.otf") format("otf");
+ src: local("ABC Sans Nova Black"), url("../fonts/ABCSansNova-Black.otf") format("otf");
 }
 @font-face {
- font-family: "ABCSansNova Light";
+ font-family: "ABC Sans Nova Light";
  font-style: normal;
  font-weight: normal;
- src: local("ABCSansNova Light"), url("../fonts/ABCSansNova-Light.otf") format("otf");
+ src: local("ABC Sans Nova Light"), url("../fonts/ABCSansNova-Light.otf") format("otf");
 }
 :root {
   font-size: 1em;
-  font-family: "ABCSansNova Regular", "Arial", sans-serif;
+  font-family: "ABC Sans Nova Regular", "Arial", sans-serif;
   color: #333;
   box-sizing: border-box;
 }
@@ -60,11 +60,11 @@ h1, p {
   margin-bottom: 1rem;
 }
 #header h1 {
-  font-family: "ABCSansNova Black", "Arial Black", sans-serif;
+  font-family: "ABC Sans Nova Black", "Arial Black", sans-serif;
   font-size: 1.3rem;
 }
 #header p {
-  font-family: "ABCSansNova Light", "Arial Narrow", sans-serif;
+  font-family: "ABC Sans Nova Light", "Arial Narrow", sans-serif;
   margin-top: .25rem;
   font-size: .9rem;
 }
@@ -87,7 +87,7 @@ h1, p {
 .box {
   min-width: 3rem;
   height: 3rem;
-  font-family: "ABCSansNova Black", "Arial Black", sans-serif;
+  font-family: "ABC Sans Nova Black", "Arial Black", sans-serif;
   line-height: 3rem;
   text-align: center;
   font-size: 1.5rem;
@@ -125,7 +125,7 @@ hr {
   opacity: 0;
 }
 #footer {
-  font-family: "ABCSansNova Light", "Arial Narrow", sans-serif;
+  font-family: "ABC Sans Nova Light", "Arial Narrow", sans-serif;
   font-size: .8rem;
 }
 .axis .domain, .axis .tick line {
@@ -151,7 +151,7 @@ hr {
   margin-bottom: .5rem;
 }
 .key div:first-child {
-  font-family: "ABCSansNova Black", "Arial Black", sans-serif;
+  font-family: "ABC Sans Nova Black", "Arial Black", sans-serif;
   color: white;
   margin-right: .25rem;
   height: 3rem;
