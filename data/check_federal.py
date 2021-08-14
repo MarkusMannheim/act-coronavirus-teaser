@@ -28,7 +28,7 @@ else:
         print("update found")
         first = contents[contents.index("dose 1") + 2]
         second = contents[contents.index("dose 2") + 2]
-        print(f"one-plus doses: {first}; two doses: {second}")        
+        print(f"one-plus doses: {first}; two doses: {second}")
         data.at[lastRow, "first"] = float(first.replace(",", ""))
         data.at[lastRow, "second"] = float(second.replace(",", ""))
         data.to_csv("./case_data.csv", index=False)
