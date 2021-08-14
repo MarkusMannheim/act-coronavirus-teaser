@@ -15,7 +15,7 @@ lastDate = data.at[lastRow, "date"]
 
 # data collected for latest date?
 if data.at[lastRow, "first"] > 0:
-    print(f"federal data already collected for {lastData:%b %a, %Y}")
+    print(f"federal data already collected for {lastDate:%b %d, %Y}")
 else:
     # scrape federal data
     print("checking federal Health Department website ...")
@@ -36,6 +36,7 @@ else:
         data["one"] = (data["first"] - data["second"]) / 344013
         data["two"] = data["second"] / 344013
         data = data[list(data.columns)[:5] + list(data.columns)[-2:]]
+        data.at[lastRow, "average"] = data.iloc[lastRow - 6:]["new"].mean()
         data.to_csv("./data.csv", index=False)
         print("data.csv written")
     except:
