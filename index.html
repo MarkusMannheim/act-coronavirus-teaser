@@ -44,36 +44,60 @@
               <div class="box"></div>
               <div>days since last case</div>
             </div>
+            <div id="twoDoses" class="count">
+              <div class="box"></div>
+              <div>fully vaccinated</div>
+            </div>
+            <div id="oneDose" class="count">
+              <div class="box"></div>
+              <div>half-vaccinated</div>
+            </div>
           </div>
           <hr>
           <div id="chartHead">
-            Vaccinations among Canberrans aged 16+:
+            <div id="options">
+              <div class="option selected" id="selectCases" onclick="switchChart(this)">daily cases</div>
+              <div class="option" id="selectVax" onclick="switchChart(this)">vaccination rate</div>
+            </div>
           </div>
         </div>
         <svg id="icon"></svg>
       </div>
       <svg id="chart">
-        <g id="chartGroup"></g>
+        <g id="chartGroupCases" class="chartGroup selected"></g>
+        <g id="chartGroupVax" class="chartGroup"></g>
         <g id="axisGroup">
           <g id="xAxisGroup" class="axis"></g>
           <g id="yAxisGroup" class="axis"></g>
         </g>
       </svg>
       <div id="keys">
-        <div class="key one">
-          <div></div>
-          <div>at least one dose</div>
+        <div class="key cases selected">
+          <div class="item">
+            <div class="keyBox cases"></div>
+            <div>new cases</div>
+          </div>
+          <div class="item">
+            <div class="keyBox average"></div>
+            <div>seven-day average</div>
+          </div>
         </div>
-        <div class="key two">
-          <div></div>
-          <div>two doses</div>
+        <div class="key vax">
+          <div class="item">
+            <div class="keyBox fullyVaccinated"></div>
+            <div>fully vaccinated</div>
+          </div>
+          <div class="item">
+            <div class="keyBox halfVaccinated"></div>
+            <div>half-vaccinated</div>
+          </div>
         </div>
       </div>
       <div id="footer">
-        Note: Vaccination reports usually have a two-day lag.
-        The ABC has smoothed some past vaccination counts to address erroneous and missing government data.
-        Population based on June&#160;2020 estimates.
-        Sources: ACT Health, Commonwealth Department of Health, covidlive.com.au, ABS
+        <strong>*</strong> Vaccination data usually have a two-day lag.
+        Rate based on June&nbsp;2020 estimates of the ACT's population aged 16 and over.
+        The ABC has smoothed some past vaccination counts to address erroneous government data.
+        Sources: ACT Health, federal Department of Health, ABS
       </div>
     </container>
 
@@ -87,15 +111,21 @@
       newCases = d3.select("#newCases");
       activeCases = d3.select("#activeCases");
       daysSince = d3.select("#daysSince");
+      oneDose = d3.select("#oneDose");
+      twoDoses = d3.select("#twoDoses");
       counts = d3.select("#counts");
       icon = d3.select("#icon");
       chartHead = d3.select("#chartHead");
       chart = d3.select("#chart");
-      chartGroup = d3.select("#chartGroup");
+      chartGroupCases = d3.select("#chartGroupCases");
+      chartGroupVax = d3.select("#chartGroupVax");
       xAxisGroup = d3.select("#xAxisGroup");
       yAxisGroup = d3.select("#yAxisGroup");
-      keys = d3.select("#keys");
+      options = d3.select("#options");
+      selectCases = d3.select("#selectCases");
+      selectVax = d3.select("#selectVax");
       footer = d3.select("#footer");
+      displayOption = "selectCases";
 
       // load LGA data
       Promise.all([
@@ -155,9 +185,7 @@
           }
           daysSince.select(".box")
             .text(lastDay);
-
-          // chartData
-          chartData = covidData
+          vaxData = covidData
             .filter(function(d) {
               return d.one > 0;
             })
@@ -168,47 +196,89 @@
                 two: d.two
               };
             });
-          stackedData = d3.stack()
+          oneDose.select(".box")
+            .text(d3.format(".0%")(vaxData[vaxData.length - 1].one));
+          twoDoses.select(".box")
+            .text(d3.format(".0%")(vaxData[vaxData.length - 1].two));
+
+          // chartData
+          stackedDataVax = d3.stack()
             .keys(["two", "one"])
-            (chartData);
-          area = d3.area()
-            .x(function(d) { return x(d.data.date); })
-            .y1(function(d) { return y(d[1]); })
-            .y0(function(d) { return y(d[0]); });
+            (vaxData);
+          areaVax = d3.area()
+            .x(function(d) { return xVax(d.data.date); })
+            .y1(function(d) { return yVax(d[1]); })
+            .y0(function(d) { return yVax(d[0]); });
+          caseData = covidData
+            .filter(function(d, i) {
+              return i > covidData.length - 15;
+            })
+            .map(function(d) {
+              return {
+                date: d.date,
+                new: d.new,
+                average: d.average
+              };
+            });
+          line = d3.line()
+            .x(function(d) {
+              return xCases(d.date);
+            })
+            .y(function(d) {
+              return yCases(d.average);
+            })
+            .curve(d3.curveBasis);
 
           // prepare chart
           margin = {
-            top: 10,
-            right: 5,
+            top: 30,
+            right: 10,
             bottom: 30,
             left: 30
           };
-          x = d3.scaleTime()
-            .domain(d3.extent(chartData.map(function(d) {
+          xVax = d3.scaleTime()
+            .domain(d3.extent(vaxData.map(function(d) {
               return d.date;
             })));
-          y = d3.scaleLinear()
-            .domain(d3.extent(chartData.map(function(d) {
+          yVax = d3.scaleLinear()
+            .domain(d3.extent(vaxData.map(function(d) {
               return d.one + d.two;
             }))).nice();
-          xAxis = d3.axisBottom(x)
+          xCases = d3.scalePoint()
+            .domain(caseData.map(function(d) {
+              return d.date;
+            }))
+            .padding(.5);
+          yCases = d3.scaleLinear()
+            .domain(d3.extent(caseData.map(function(d) {
+              return d3.max([d.new, d.average]);
+            }))).nice();
+          xAxisVax = d3.axisBottom(xVax)
             .tickSizeOuter(0)
             .ticks(4, "%b");
-          yAxis = d3.axisLeft(y)
+          yAxisVax = d3.axisLeft(yVax)
             .tickSizeOuter(0)
             .ticks(3, ".0%")
             .tickPadding(5);
-          areas = chartGroup
+          yAxisCases = d3.axisLeft(yCases)
+            .tickSizeOuter(0)
+            .ticks(3, ".0f")
+            .tickPadding(5);
+          areasVax = chartGroupVax
             .selectAll(".area")
-              .data(stackedData)
+              .data(stackedDataVax)
             .enter().append("path")
               .attr("class", function(d) {
                 return "area " + d.key;
               });
-          keys.select(".key.one div")
-            .text(d3.format(".0%")(chartData[chartData.length - 1].one + chartData[chartData.length - 1].two));
-          keys.select(".key.two div")
-            .text(d3.format(".0%")(chartData[chartData.length - 1].two));
+          caseBars = chartGroupCases
+            .selectAll(".bar")
+              .data(caseData)
+            .enter().append("rect")
+              .classed("bar", true);
+          caseLine = chartGroupCases
+            .append("path")
+              .classed("line", true);
 
           // fade in; calculate chart dimensions
           d3.timeout(function() {
@@ -226,19 +296,55 @@
         mapDimensions = document.getElementById("icon").getBoundingClientRect();
         width = chartDimensions.width;
         height = chartDimensions.height;
-        x.range([margin.left, width - margin.right]);
-        y.range([height - margin.bottom, margin.top]);
-        yAxis.tickSizeInner(margin.left + margin.right - width);
-        xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")")
-          .call(xAxis);
-        yAxisGroup.attr("transform", "translate(" + (margin.left) + ", 0)")
-          .call(yAxis);
-        keys.style("left", (margin.left + 16) + "px")
-          .style("top", (chartDimensions.top + margin.top) + "px");
-        areas.attr("d", area);
-        icon.style("width", (mapDimensions.height * 118 / 150) + "px");
-        projection.fitHeight(mapDimensions.height - 8, mapData);
+        xVax.range([margin.left, width - margin.right]);
+        yVax.range([height - margin.bottom, margin.top]);
+        xCases.range([margin.left, width - margin.right]);
+        yCases.range([height - margin.bottom, margin.top]);
+        yAxisVax.tickSizeInner(margin.left + margin.right - width);
+        yAxisCases.tickSizeInner(margin.left + margin.right - width);
+        xAxisCases = d3.axisBottom(
+            d3.scaleTime()
+              .domain(d3.extent(caseData, function(d) {
+                  return d.date;
+                }))
+              .range([xCases.range()[0] + xCases.step() / 2, xCases.range()[1] - xCases.step() / 2]))
+          .tickSizeOuter(0)
+          .ticks(4, "%b %-d");
+        xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
+        yAxisGroup.attr("transform", "translate(" + (margin.left) + ", 0)");
+        if (displayOption == "selectCases") {
+          xAxisGroup.call(xAxisCases);
+          yAxisGroup.call(yAxisCases);
+        } else {
+          xAxisGroup.call(xAxisVax);
+          yAxisGroup.call(yAxisVax);
+        }
+        areasVax.attr("d", areaVax);
+        projection.fitWidth(mapDimensions.width, mapData);
         map.attr("d", path(mapData));
+        caseBars.attr("width", xCases.step() * .9)
+          .attr("x", function(d) {
+            return xCases(d.date) - xCases.step() * .45;
+          })
+          .attr("y", function(d) {
+            return yCases(d.new);
+          })
+          .attr("height", function(d) {
+            return yCases(0) - yCases(d.new);
+          });
+        caseLine.attr("d", line(caseData));
+      }
+
+      function switchChart(element) {
+        d3.selectAll(".option")
+          .classed("selected", false);
+        element.classList.add("selected");
+        displayOption = element.id;
+        d3.selectAll(".chartGroup, .key")
+          .classed("selected", function() {
+            return !d3.select(this).classed("selected");
+          });
+        resize();
       }
     </script>
   </body>
