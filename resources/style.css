@@ -13,7 +13,7 @@
 }
 :root {
   font-size: 1em;
-  font-family: ABCSansNovaRegular, "Arial", sans-serif;
+  font-family: ABCSansNovaRegular, Helvetica, sans-serif;
   color: #333;
   box-sizing: border-box;
 }
@@ -55,11 +55,11 @@ h1, p {
   margin-bottom: 1rem;
 }
 #header h1 {
-  font-family: ABCSansNovaBlack, "Arial Black", sans-serif;
+  font-family: ABCSansNovaBlack, "Arial Black", Gadget, sans-serif;
   font-size: 1.3rem;
 }
 #header p {
-  font-family: ABCSansNovaLight, "Arial Narrow", sans-serif;
+  font-family: ABCSansNovaLight, Helvetica, sans-serif;
   margin-top: .25rem;
   font-size: .9rem;
 }
@@ -82,7 +82,7 @@ h1, p {
 .box {
   min-width: 3rem;
   height: 3rem;
-  font-family: ABCSansNovaBlack, "Arial Black", sans-serif;
+  font-family: ABCSansNovaBlack, "Arial Black", Gadget, sans-serif;
   line-height: 3rem;
   text-align: center;
   font-size: 1.5rem;
@@ -162,7 +162,7 @@ hr {
   border-radius: 0 5px 5px 0;
 }
 #footer {
-  font-family: ABCSansNovaLight, "Arial Narrow", sans-serif;
+  font-family: ABCSansNovaLight, Helvetica, sans-serif;
   font-size: .8rem;
 }
 .axis .domain {
