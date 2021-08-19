@@ -94,10 +94,10 @@ h1, p {
   border-radius: 50%;
 }
 .keyBox.female {
-  background: #FF6100;
+  background: #F75F00;
 }
 .keyBox.male {
-  background: #01CFFF;
+  background: #009CBF;
 }
 .keyBox.pop {
   background: #999;
@@ -106,10 +106,10 @@ h1, p {
   fill: #ccc;
 }
 .bar.male.case {
-  fill: #01CFFF;
+  fill: #009CBF;
 }
 .bar.female.case {
-  fill: #FF6100;
+  fill: #F75F00;
 }
 @media only screen and (max-width: 500px) {
   #header {
@@ -142,5 +142,64 @@ h1, p {
     width: .8rem;
     height: .8rem;
     margin-right: .25rem;
+  }
+}
+@media only screen and (min-width: 700px) {
+  :root {
+    color: white;
+    text-align: center;
+  }
+  #container {
+    bottom: 0;
+    padding: 1.5rem;
+    background: #333;
+  }
+  #header {
+    margin-bottom: 1.5rem;
+  }
+  #header h1 {
+    font-family: ABCSansNovaBlack, "Arial Black", Gadget, sans-serif;
+    font-size: 4rem;
+  }
+  #header p {
+    font-family: ABCSansNova, Helvetica, sans-serif;
+    font-size: 1.5rem;
+    color: #e6e6e6;
+  }
+  #footer {
+    font-family: ABCSansNova, Helvetica, sans-serif;
+    font-size: 1.1rem;
+  }
+  .axis .tick line {
+    stroke: #f2f2f2;
+    stroke-dasharray: 2 3;
+  }
+  .axis .tick text {
+    fill: white;
+    font-size: 1.3rem;
+  }
+  #yAxisGroup .tick text {
+     font-family: ABCSansNovaBlack, "Arial Black", Gadget, sans-serif;
+     font-size: 1.4rem;
+  }
+  #keys {
+    margin-bottom: 2rem;
+  }
+  .item {
+    font-family: ABCSansNovaBlack, "Arial Black", Gadget, sans-serif;
+    line-height: 1.75rem;
+    font-size: 1.75rem;
+    margin-left: 2rem;
+  }
+  .keyBox {
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: .5rem;
+  }
+  .keyBox.pop {
+    background: #999;
+  }
+  .bar.pop {
+    fill: #999;
   }
 }
