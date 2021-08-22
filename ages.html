@@ -109,11 +109,11 @@
             }))
             .padding(.05);
           xFaxis = d3.axisBottom(xF)
-            .tickValues([.05, .1, .15, .2])
+            .tickValues([.05, .1, .15])
             .tickFormat(d3.format(".0%"))
             .tickPadding(10);
           xMaxis = d3.axisBottom(xM)
-            .tickValues([.05, .1, .15, .2])
+            .tickValues([.05, .1, .15])
             .tickFormat(d3.format(".0%"))
             .tickPadding(10);
           yAxis = d3.axisLeft(y)
@@ -162,9 +162,9 @@
           left: 0
         } : {
           top: 0,
-          right: 15,
+          right: 0,
           bottom: 50,
-          left: 15
+          left: 0
         };
         xF.range([margin.left + (width - margin.left - margin.right) / 2, margin.left]);
         xM.range([margin.left + (width - margin.left - margin.right) / 2, width - margin.right]);
