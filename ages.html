@@ -26,7 +26,7 @@
     <container id="container">
       <div id="header">
         <h1>OUTBREAK BY AGE</h1>
-        <p>updated Sat, Aug 21, 2021</p>
+        <p>updated Sun, Aug 22, 2021</p>
       </div>
       <svg id="chart">
         <g id="chartGroup"></g>
@@ -53,7 +53,7 @@
         </div>
       </div>
       <div id="footer">
-        The ages of eight cases have not been published.
+        The ages of <span></span> cases have not been published.
         Population estimates from June&nbsp;2020. Sources: ACT Health, ABS
       </div>
     </container>
@@ -84,9 +84,11 @@
           population = d3.sum(ageData.map(function(d) {
             return d.pop_females + d.pop_males;
           }));
+          unknown = 10;
           cases = d3.sum(ageData.map(function(d) {
             return d.males + d.females;
-          })) + 8;
+          })) + unknown;
+          footer.select("span").text(unknown);
           maxScale = d3.max(ageData, function(d) {
             return d3.max([
               d.males / cases,
@@ -160,9 +162,9 @@
           left: 0
         } : {
           top: 0,
-          right: 0,
+          right: 15,
           bottom: 50,
-          left: 0
+          left: 15
         };
         xF.range([margin.left + (width - margin.left - margin.right) / 2, margin.left]);
         xM.range([margin.left + (width - margin.left - margin.right) / 2, width - margin.right]);
