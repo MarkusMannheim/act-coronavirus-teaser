@@ -26,7 +26,7 @@
     <container id="container">
       <div id="header">
         <h1>OUTBREAK BY AGE</h1>
-        <p>updated Tue, Aug 24, 2021</p>
+        <p>updated Thu, Aug 26, 2021</p>
       </div>
       <svg id="chart">
         <g id="chartGroup"></g>
@@ -84,7 +84,7 @@
           population = d3.sum(ageData.map(function(d) {
             return d.pop_females + d.pop_males;
           }));
-          unknown = 7;
+          unknown = 3;
           cases = d3.sum(ageData.map(function(d) {
             return d.males + d.females;
           })) + unknown;
