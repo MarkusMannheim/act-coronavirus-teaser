@@ -94,22 +94,22 @@ h1, p {
   border-radius: 50%;
 }
 .keyBox.female {
-  background: #F75F00;
+  background: #FF6100;
 }
 .keyBox.male {
-  background: #009CBF;
+  background: #01CFFF;
 }
 .keyBox.pop {
-  background: #999;
+  background: #ccc;
 }
 .bar.pop {
   fill: #ccc;
 }
 .bar.male.case {
-  fill: #009CBF;
+  fill: #01CFFF;
 }
 .bar.female.case {
-  fill: #F75F00;
+  fill: #FF6100;
 }
 @media only screen and (max-width: 500px) {
   #header {
@@ -201,5 +201,11 @@ h1, p {
   }
   .bar.pop {
     fill: #999;
+  }
+  .keyBox.male {
+    background: #009CBF;
+  }
+  .bar.male.case {
+    fill: #009CBF;
   }
 }
