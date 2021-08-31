@@ -295,11 +295,11 @@
         mapDimensions = document.getElementById("icon").getBoundingClientRect();
         width = chartDimensions.width;
         height = chartDimensions.height;
-        xVax.range([margin.left, width - margin.right]);
+        xVax.range([margin.left + 5, width - margin.right]);
         yVax.range([height - margin.bottom, margin.top]);
         xCases.range([margin.left, width - margin.right]);
         yCases.range([height - margin.bottom, margin.top]);
-        yAxisVax.tickSizeInner(margin.left + margin.right - width);
+        yAxisVax.tickSizeInner(margin.left + 5 + margin.right - width);
         yAxisCases.tickSizeInner(margin.left + margin.right - width);
         xAxisCases = d3.axisBottom(
             d3.scaleTime()
