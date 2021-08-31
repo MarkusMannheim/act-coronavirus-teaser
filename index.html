@@ -95,8 +95,7 @@
       </div>
       <div id="footer">
         <strong>*</strong> Vaccination data usually have a two-day lag.
-        Rate based on June&nbsp;2020 estimates of the ACT's population aged 16 and over.
-        The ABC has smoothed some past vaccination counts to address erroneous government data.
+        Rate based on June&nbsp;2020 estimates of the population aged 16-plus.
         Sources: ACT Health, federal Department of Health, ABS
       </div>
     </container>
@@ -187,23 +186,23 @@
             .text(lastDay);
           vaxData = covidData
             .filter(function(d) {
-              return d.one > 0;
+              return d.half > 0;
             })
             .map(function(d) {
               return {
                 date: d.date,
-                one: d.one,
-                two: d.two
+                half: d.half,
+                full: d.full
               };
             });
           oneDose.select(".box")
-            .text(d3.format(".0%")(vaxData[vaxData.length - 1].one));
+            .text(d3.format(".0%")(vaxData[vaxData.length - 1].half));
           twoDoses.select(".box")
-            .text(d3.format(".0%")(vaxData[vaxData.length - 1].two));
+            .text(d3.format(".0%")(vaxData[vaxData.length - 1].full));
 
           // chartData
           stackedDataVax = d3.stack()
-            .keys(["two", "one"])
+            .keys(["full", "half"])
             (vaxData);
           areaVax = d3.area()
             .x(function(d) { return xVax(d.data.date); })
@@ -241,9 +240,9 @@
               return d.date;
             })));
           yVax = d3.scaleLinear()
-            .domain(d3.extent(vaxData.map(function(d) {
-              return d.one + d.two;
-            }))).nice();
+            .domain([0, d3.max(vaxData.map(function(d) {
+              return d.half + d.full;
+            }))]).nice();
           xCases = d3.scalePoint()
             .domain(caseData.map(function(d) {
               return d.date;
@@ -255,7 +254,7 @@
             }))).nice();
           xAxisVax = d3.axisBottom(xVax)
             .tickSizeOuter(0)
-            .ticks(4, "%b");
+            .ticks(5, "%b %-d");
           yAxisVax = d3.axisLeft(yVax)
             .tickSizeOuter(0)
             .ticks(3, ".0%")
@@ -309,7 +308,7 @@
                 }))
               .range([xCases.range()[0] + xCases.step() / 2, xCases.range()[1] - xCases.step() / 2]))
           .tickSizeOuter(0)
-          .ticks(4, "%b %-d");
+          .ticks(5, "%b %-d");
         xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
         yAxisGroup.attr("transform", "translate(" + (margin.left) + ", 0)");
         if (displayOption == "selectCases") {
