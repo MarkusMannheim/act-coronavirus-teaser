@@ -295,11 +295,11 @@
         mapDimensions = document.getElementById("icon").getBoundingClientRect();
         width = chartDimensions.width;
         height = chartDimensions.height;
-        xVax.range([margin.left + 10, width - margin.right]);
+        xVax.range([margin.left + 5, width - margin.right]);
         yVax.range([height - margin.bottom, margin.top]);
         xCases.range([margin.left, width - margin.right]);
         yCases.range([height - margin.bottom, margin.top]);
-        yAxisVax.tickSizeInner(margin.left + 10 + margin.right - width);
+        yAxisVax.tickSizeInner(margin.left + 5 + margin.right - width);
         yAxisCases.tickSizeInner(margin.left + margin.right - width);
         xAxisCases = d3.axisBottom(
             d3.scaleTime()
@@ -310,7 +310,7 @@
           .tickSizeOuter(0)
           .ticks(5, "%b %-d");
         xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
-        yAxisGroup.attr("transform", "translate(" + (margin.left) + ", 0)");
+        yAxisGroup.attr("transform", "translate(" + (margin.left + 5) + ", 0)");
         if (displayOption == "selectCases") {
           xAxisGroup.call(xAxisCases);
           yAxisGroup.call(yAxisCases);
