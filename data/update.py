@@ -69,6 +69,7 @@ while True:
 print("calculating remaining fields ...")
 data["half"] = (data["first"] - data["second"]) / 344014
 data["full"] = data["second"] / 344014
-data.at[date, "average"] = data.iloc[len(data) - 7:len(data)]["new"].mean()
+for i, date in enumerate(data.index):
+    data.at[date, "average"] = data.iloc[max(i - 6, 0):i + 1]["new"].mean()
 data.to_csv("data.csv", index_label="date")
 print("date.csv written")
