@@ -1,4 +1,4 @@
-import io, requests
+import io, requests, random
 import pandas as pd, numpy as np
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -20,7 +20,7 @@ driver = webdriver.Chrome(options=chrome_options)
 
 # scrape ACT data
 print("scraping ACT website ...")
-driver.get("https://www.covid19.act.gov.au/updates/act-covid-19-statistics")
+driver.get(f"https://www.covid19.act.gov.au/updates/act-covid-19-statistics?randomKey={random.randint(1, 9000)+999}")
 date = WebDriverWait(driver, 5).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, ".spf-article-card--tabular-subtitle p"))
 )
@@ -37,11 +37,12 @@ print(f"latest data for {date:%B %-d, %Y}:")
 data.at[date, "new"] = new
 print(f"{new:,.0f} new cases")
 data.at[date, "total"] = data.at[date - pd.Timedelta(days=1), "total"] + new
-print(f"{data.at[date, 'total']:,.0f} new cases")
+print(f"{data.at[date, 'total']:,.0f} total cases")
 data.at[date, "dead"] = data.at[date - pd.Timedelta(days=1), "dead"]
 print(f"{data.at[date, 'dead']:,.0f} dead")
 data.at[date, "recovered"] = data.at[date, "total"] - data.at[date, "dead"] - active
 print(f"{data.at[date, 'recovered']:,.0f} recovered")
+print(f"{active:,.0f} active cases")
 
 # scrape missing vax data
 vaxDate = date
