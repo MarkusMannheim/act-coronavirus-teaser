@@ -62,6 +62,7 @@ while True:
             vaxDate = vaxDate - pd.Timedelta(days=1)
         except:
             print("no data available")
+            vaxDate = vaxDate - pd.Timedelta(days=1)
     else:
         break
 
