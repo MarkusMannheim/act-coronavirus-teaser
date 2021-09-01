@@ -254,7 +254,7 @@
             }))).nice();
           xAxisVax = d3.axisBottom(xVax)
             .tickSizeOuter(0)
-            .ticks(5, "%b %-d");
+            .ticks(4, "%b %-d");
           yAxisVax = d3.axisLeft(yVax)
             .tickSizeOuter(0)
             .ticks(3, ".0%")
@@ -308,7 +308,7 @@
                 }))
               .range([xCases.range()[0] + xCases.step() / 2, xCases.range()[1] - xCases.step() / 2]))
           .tickSizeOuter(0)
-          .ticks(5, "%b %-d");
+          .ticks(4, "%b %-d");
         xAxisGroup.attr("transform", "translate(0, " + (height - margin.bottom) + ")");
         yAxisGroup.attr("transform", "translate(" + (margin.left + 5) + ", 0)");
         if (displayOption == "selectCases") {
