@@ -52,7 +52,7 @@ while True:
         print(f"checking {vaxDate:%B %-d, %Y} ...")
         url = f"https://www.health.gov.au/sites/default/files/documents/{vaxDate:%Y}/{vaxDate:%m}/covid-19-vaccine-rollout-update-{vaxDate:%-d-%B-%Y}.pdf".lower()
         try:
-            request = requests.get(url)
+            request = requests.get(urls[url])
             file = io.BytesIO(request.content)
             reader = PdfFileReader(file)
             contents = reader.getPage(5).extractText().split("\n")
@@ -60,10 +60,9 @@ while True:
             second = float(contents[contents.index("dose 2") + 2].strip().replace(",", ""))
             data.at[vaxDate, "first"] = first
             data.at[vaxDate, "second"] = second
-            vaxDate = vaxDate - pd.Timedelta(days=1)
         except:
             print("no data available")
-            vaxDate = vaxDate - pd.Timedelta(days=1)
+        vaxDate = vaxDate - pd.Timedelta(days=1)
     else:
         break
 
