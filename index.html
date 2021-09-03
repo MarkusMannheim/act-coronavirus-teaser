@@ -210,7 +210,7 @@
             .y0(function(d) { return yVax(d[0]); });
           caseData = covidData
             .filter(function(d, i) {
-              return i > covidData.length - 22;
+              return d.date > new Date("2021-08-11")
             })
             .map(function(d) {
               return {

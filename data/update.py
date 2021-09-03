@@ -52,7 +52,7 @@ while True:
         print(f"checking {vaxDate:%B %-d, %Y} ...")
         url = f"https://www.health.gov.au/sites/default/files/documents/{vaxDate:%Y}/{vaxDate:%m}/covid-19-vaccine-rollout-update-{vaxDate:%-d-%B-%Y}.pdf".lower()
         try:
-            request = requests.get(urls[url])
+            request = requests.get(url)
             file = io.BytesIO(request.content)
             reader = PdfFileReader(file)
             contents = reader.getPage(5).extractText().split("\n")
