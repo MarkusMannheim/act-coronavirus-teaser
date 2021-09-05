@@ -60,6 +60,9 @@ while True:
             second = float(contents[contents.index("dose 2") + 2].strip().replace(",", ""))
             data.at[vaxDate, "first"] = first
             data.at[vaxDate, "second"] = second
+            print("data found:")
+            print(f"first doses: {first:,.0f}")
+            print(f"second doses: {second:,.0f}")
         except:
             print("no data available")
         vaxDate = vaxDate - pd.Timedelta(days=1)
