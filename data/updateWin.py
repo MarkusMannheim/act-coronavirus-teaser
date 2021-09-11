@@ -28,6 +28,7 @@ date = pd.to_datetime(date.get_attribute("innerText").split(", ")[1])
 stats = driver.find_elements_by_class_name("stat-card-number")
 new = float(stats[0].get_attribute("innerText"))
 active = float(stats[1].get_attribute("innerText"))
+recovered = float(stats[2].get_attribute("innerText"))
 
 driver.close()
 driver.quit()
@@ -40,8 +41,8 @@ data.at[date, "total"] = data.at[date - pd.Timedelta(days=1), "total"] + new
 print(f"{data.at[date, 'total']:,.0f} total cases")
 data.at[date, "dead"] = data.at[date - pd.Timedelta(days=1), "dead"]
 print(f"{data.at[date, 'dead']:,.0f} dead")
-data.at[date, "recovered"] = data.at[date, "total"] - data.at[date, "dead"] - active
-print(f"{data.at[date, 'recovered']:,.0f} recovered")
+data.at[date, "recovered"] = recovered
+print(f"{recovered:,.0f} recovered")
 print(f"{active:,.0f} active cases")
 
 # scrape missing vax data
@@ -60,10 +61,12 @@ while True:
             second = float(contents[contents.index("dose 2") + 2].strip().replace(",", ""))
             data.at[vaxDate, "first"] = first
             data.at[vaxDate, "second"] = second
-            vaxDate = vaxDate - pd.Timedelta(days=1)
+            print("data found:")
+            print(f"first doses: {first:,.0f}")
+            print(f"second doses: {second:,.0f}")
         except:
             print("no data available")
-            vaxDate = vaxDate - pd.Timedelta(days=1)
+        vaxDate = vaxDate - pd.Timedelta(days=1)
     else:
         break
 
