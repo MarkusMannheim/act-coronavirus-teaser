@@ -75,5 +75,10 @@ data["half"] = (data["first"] - data["second"]) / 344014
 data["full"] = data["second"] / 344014
 for i, date in enumerate(data.index):
     data.at[date, "average"] = data.iloc[max(i - 6, 0):i + 1]["new"].mean()
+    if (i < 8) or (data.iloc[i - 8:i - 3]["new"].mean() == 0):
+        data.at[date, "reff"] = None
+    else:
+        data.at[date, "reff"] = data.iloc[i - 4:i + 1]["new"].mean() / data.iloc[i - 8:i - 3]["new"].mean()
 data.to_csv("data.csv", index_label="date")
+print(f"latest Reff: {data.iat[-1, 9]:.2f}")
 print("date.csv written")
