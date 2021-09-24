@@ -56,8 +56,12 @@ while True:
             file = io.BytesIO(request.content)
             reader = PdfFileReader(file)
             contents = reader.getPage(5).extractText().split("\n")
-            first = float(contents[contents.index("dose 1") + 2].strip().replace(",", ""))
-            second = float(contents[contents.index("dose 2") + 2].strip().replace(",", ""))
+            try:
+                first = float(contents[contents.index("dose 1") + 2].strip().replace(",", ""))
+                second = float(contents[contents.index("dose 2") + 2].strip().replace(",", ""))
+            except:
+                first = float(contents[contents.index("-dose 1") + 2].strip().replace(",", ""))
+                second = float(contents[contents.index("-dose 2") + 2].strip().replace(",", ""))
             data.at[vaxDate, "first"] = first
             data.at[vaxDate, "second"] = second
             print("data found:")
