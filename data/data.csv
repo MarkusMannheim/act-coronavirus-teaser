@@ -1,4 +1,4 @@
-  date,new,total,recovered,dead,first,second,half,full,average,reff
+date,new,total,recovered,dead,first,second,half,full,average,reff
 2020-03-11,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 2020-03-12,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.5,
 2020-03-13,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.3333333333333333,
