@@ -162,15 +162,6 @@
                   return d;
                 }
               });
-          notes = container
-            .append("div")
-              .attr("id", "notes")
-              .text("As of " + d3.timeFormat("%A, %B %-d")(x2.domain()[1])
-                + ", there are " + (caseData.slice(-1)[0].active
-                + caseData.slice(-1)[0].hospitalised
-                + caseData.slice(-1)[0]["intensive care"]
-                + caseData.slice(-1)[0].ventilated) + " people in Canberra known "
-                + " to have the disease.");
 
         } else if (selection == "cases") {
           x = d3.scaleBand()
@@ -204,11 +195,6 @@
                   return "seven-day average";
                 }
               });
-          notes = container
-            .append("div")
-              .attr("id", "notes")
-              .text("This graphic updates itself daily using ACT Health and "
-                + "federal Health Department data.");
 
         } else {
           x = d3.scaleLinear()
