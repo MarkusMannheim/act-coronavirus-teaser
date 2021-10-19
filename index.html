@@ -48,8 +48,8 @@
           <g id="yAxisGroup" class="axis"></g>
         </g>
       </svg>
-      <div id="tip"></div>
     </div>
+    <div id="tip"></div>
 
     <script>
       // page elements
@@ -172,6 +172,13 @@
                   return d;
                 }
               });
+          notes = container
+            .append("div")
+              .attr("id", "notes")
+              .text("The ACT outbreak has infected at least "
+                + d3.format(",.0f")(caseData.slice(-1)[0].total) + " people "
+                + "since August 11 and is linked with "
+                + d3.format(",.0f")(d3.sum(caseData.map(d => d.dead))) + " deaths.");
 
         } else if (selection == "cases") {
           x = d3.scaleBand()
@@ -205,6 +212,11 @@
                   return "seven-day average";
                 }
               });
+          notes = container
+            .append("div")
+              .attr("id", "notes")
+              .text("These data were last updated on "
+                + d3.timeFormat("%A, %B %-d, %Y")(caseData.slice(-1)[0].date) + ".");
 
         } else {
           x = d3.scaleLinear()
@@ -242,7 +254,7 @@
               .text("Note: Vaccination rates are based on the entire population, "
                 + "using the Australian Bureau of Statistics' March 2021 "
                 + "population estimates. Data last updated on "
-                + d3.timeFormat("%B %-d, %Y")(vaxUpdate));
+                + d3.timeFormat("%B %-d, %Y")(vaxUpdate) + ".");
         }
 
         resize();
@@ -474,11 +486,11 @@
           })
           .style("left", function() {
               if (x(d.date) + tipDim.width / 2 + 10 > width - margin.right) {
-                return (width - margin.right - tipDim.width - 20) + "px";
+                return (dimensions.left + width - margin.right - tipDim.width - 20) + "px";
               } else if (x(d.date) - tipDim.width / 2 - 10 < margin.left) {
-                return (margin.left + 10) + "px";
+                return (dimensions.left + margin.left + 10) + "px";
               } else {
-                return (x(d.date) + 10 - tipDim.width / 2) + "px";
+                return (dimensions.left + x(d.date) + 10 - tipDim.width / 2) + "px";
               }
             })
           .style("opacity", 1);
@@ -509,11 +521,11 @@
           })
           .style("left", function() {
             if (x(d.date) + tipDim.width / 2 + 10 > width - margin.right) {
-              return (width - margin.right - tipDim.width - 20) + "px";
+              return (dimensions.left + width - margin.right - tipDim.width - 20) + "px";
             } else if (x(d.date) - tipDim.width / 2 - 10 < margin.left) {
-              return (margin.left + 10) + "px";
+              return (dimensions.left + margin.left + 10) + "px";
             } else {
-              return (x(d.date) + 10 - tipDim.width / 2) + "px";
+              return (dimensions.left + x(d.date) + 10 - tipDim.width / 2) + "px";
             }
           })
           .style("opacity", 1);
