@@ -26,8 +26,8 @@ body {
   top: 0;
   right: 0;
   left: 0;
-  bottom: .5rem;
-  padding: .5rem;
+  bottom: 0;
+  padding: 1rem;
   display: flex;
   flex-flow: column;
   background: #f2f2f2;
@@ -60,13 +60,11 @@ h1, p {
   font-size: .9rem;
   border-radius: .5rem;
   border: solid .5px #333;
+  margin-right: .5rem;
 }
 .choice.selected {
   background: white;
   color: #333;
-}
-.choice {
-  margin-right: .5rem;
 }
 .choice:last-child {
  margin-right: 0;
@@ -197,6 +195,7 @@ h1, p {
   font-size: 1rem;
 }
 #notes {
+  text-align: center;
   margin-top: .5rem;
   font-size: .9rem;
   color: #666;
@@ -276,8 +275,6 @@ h1, p {
     padding: 1px 3px;
     font-size: .85rem;
     border-radius: .5rem;
-  }
-  .choice {
     margin-right: .25rem;
   }
   .axis .tick text {
@@ -318,5 +315,80 @@ h1, p {
     padding: 3px 6px;
     border-radius: .25rem;
     pointer-events: none;
+  }
+}
+@media only screen and (min-width: 750px) {
+  body {
+    margin-bottom: 0;
+  }
+  #container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 750px;
+    height: 600px;
+  }
+  #selector {
+    margin-bottom: 1rem;
+  }
+  #header {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+  .choice {
+    padding: 3px 6px;
+    width: 150px;
+    font-size: 1.1rem;
+    border-radius: .75rem;
+    margin-right: 1rem;
+  }
+  .axis .tick text {
+    font-size: .9rem;
+  }
+  #footer {
+    margin-top: 1rem;
+  }
+  #footer .key {
+    padding: 2px 4px;
+    border-radius: .5rem;
+    font-size: 1rem;
+    width: 150px;
+    margin-right: 1rem;
+  }
+  #footer .key.cases {
+    width: 150px;
+  }
+  #footer .key.average {
+    width: 150px;
+  }
+  #footer .key.first {
+    width: 150px;
+  }
+  #footer .key.second {
+    width: 150px;
+  }
+  #averageLine {
+    stroke-width: 6;
+  }
+  #yAxisGroup .tick text.vax {
+    font-size: 1.5rem;
+  }
+  #notes {
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+  .barLabel {
+    font-size: 1rem;
+  }
+  #tip {
+    padding: 4px 8px;
+    border-radius: .5rem;
+  }
+  #tip h1 {
+    font-size: 1rem;
+  }
+  #tip p {
+    font-weight: normal;
+    font-size: .9rem;
   }
 }

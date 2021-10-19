@@ -246,7 +246,14 @@
             bottom: (width < 500 ? 16 : 24),
             left: 0
           };
-          xAxis.tickSizeInner(margin.top + margin.bottom - height);
+          xAxis.tickSizeInner(margin.top + margin.bottom - height)
+          if (width < 500) {
+            xAxis.ticks(4, "%b")
+              .tickPadding(5);
+          } else {
+            xAxis.ticks(5, "%b %-d")
+              .tickPadding(10);
+          }
           vaxBars = chartGroup
             .selectAll(".vaxBar")
               .data(vaxData)
@@ -277,7 +284,7 @@
             top: 8,
             right: 8,
             bottom: (width < 500 ? 16 : 24),
-            left: 16
+            left: (width > 700 ? 32 : 16)
           };
           yAxis.tickSizeInner(margin.left + margin.right - width);
           if (width < 500) {
@@ -313,7 +320,7 @@
             top: 8,
             right: 8,
             bottom: (width < 500 ? 16 : 24),
-            left: 24
+            left: (width > 700 ? 32 : 16)
           };
           yAxis.tickSizeInner(margin.left + margin.right - width);
           if (width < 500) {
