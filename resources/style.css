@@ -62,7 +62,7 @@ h1, p {
   border: solid .5px #333;
   margin-right: .5rem;
 }
-.choice.selected {
+.choice.selected, .choice.selected:hover {
   background: white;
   color: #333;
   pointer-events: none;
@@ -281,9 +281,6 @@ h1, p {
     font-size: .85rem;
     border-radius: .5rem;
     margin-right: .25rem;
-  }
-  .choice:hover {
-    background: #333;
   }
   .axis .tick text {
     font-size: .75rem;
