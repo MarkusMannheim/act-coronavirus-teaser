@@ -27,7 +27,7 @@ body {
   right: 0;
   left: 0;
   bottom: .5rem;
-  padding: 1rem;
+  padding: .5rem;
   display: flex;
   flex-flow: column;
   background: #f2f2f2;
@@ -332,6 +332,7 @@ h1, p {
     transform: translate(-50%, -50%);
     width: 750px;
     height: 550px;
+    padding: 1rem;
   }
   #selector {
     margin-bottom: 1rem;
