@@ -51,8 +51,8 @@ h1, p {
   margin-bottom: .5rem;
 }
 .choice {
-  background: #333;
-  color: white;
+  background: white;
+  color: #333;
   padding: 2px 4px;
   width: 100px;
   text-align: center;
@@ -63,8 +63,8 @@ h1, p {
   margin-right: .5rem;
 }
 .choice.selected, .choice.selected:hover {
-  background: white;
-  color: #333;
+  background: #333;
+  color: white;
   pointer-events: none;
 }
 .choice:hover {
