@@ -175,9 +175,9 @@
           notes = container
             .append("div")
               .attr("id", "notes")
-              .text("The outbreak has infected at least "
+              .text("The ACT outbreak has infected at least "
                 + d3.format(",.0f")(caseData.slice(-1)[0].total) + " people "
-                + "since August 11 and is linked with "
+                + "and is linked with "
                 + d3.format(",.0f")(d3.sum(caseData.map(d => d.dead))) + " deaths.");
 
         } else if (selection == "cases") {
