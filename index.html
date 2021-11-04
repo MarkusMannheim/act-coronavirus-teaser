@@ -309,12 +309,11 @@
             left: (width > 700 ? 32 : 24)
           };
           yAxis.tickSizeInner(margin.left + margin.right - width);
+          xAxis.ticks(4, "%b");
           if (width < 500) {
-            xAxis.ticks(4, "%b")
-              .tickPadding(5);
+            xAxis.tickPadding(5);
           } else {
-            xAxis.ticks(5, "%b %-d")
-              .tickPadding(10);
+            xAxis.tickPadding(10);
           }
           barGroups = chartGroup
             .selectAll(".barGroup")
@@ -345,12 +344,11 @@
             left: (width > 700 ? 32 : 24)
           };
           yAxis.tickSizeInner(margin.left + margin.right - width);
+          xAxis.ticks(4, "%b");
           if (width < 500) {
-            xAxis.ticks(4, "%b")
-              .tickPadding(5);
+            xAxis.tickPadding(5);
           } else {
-            xAxis.ticks(5, "%b %-d")
-              .tickPadding(10);
+            xAxis.tickPadding(10);
           }
           stack = d3.stack()
             .keys(keyData)
