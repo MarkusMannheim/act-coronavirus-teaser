@@ -1,10 +1,5 @@
-import io, requests, random
+import io, requests
 import pandas as pd, numpy as np
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from PyPDF2 import PdfFileReader
 
 def vaxScrape(date):
@@ -46,45 +41,30 @@ def vaxScrape(date):
         vaxScrape(date)
 
 def caseScrape(date):
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--start-maximized")
-    driver = webdriver.Chrome(options=chrome_options)
-
-    print(f"scraping ACT cases for {date:%B %-d, %Y} ...")
-    driver.get(f"https://www.covid19.act.gov.au/news-articles/act-covid-19-update-{date:%-d-%B-%Y}".lower())
-
-    try:
-        outcomes = WebDriverWait(driver, 5).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".ultra-condensed td p"))
-        )
-        outcomes = [outcome.get_attribute("innerText") for outcome in outcomes if outcome.get_attribute("innerText") != ""]
-        data.at[date, "new"] = float(outcomes[2])
-        data.at[date, "active"] = float(outcomes[4])
-        data.at[date, "hospitalised"] = float(outcomes[8])
-        data.at[date, "intensive care"] = float(outcomes[10])
-        data.at[date, "dead"] = data["dead"].sum() - float(outcomes[12])
-        print("data found and recorded")
-
-    except:
-        print("no data found")
+    print()
+    print(f"Input case data for {date:%A, %B %-d, %Y}:")
+    data.at[date, "new"] = float(input("New cases:"))
+    data.at[date, "active"] = float(input("Active cases:"))
+    data.at[date, "hospitalised"] = float(input("In hospital:"))
+    data.at[date, "intensive care"] = float(input("In intensive care:"))
+    data.at[date, "ventilated"] = float(input("On ventilation:"))
+    data.at[date, "dead"] = float(input("Deaths in past day:"))
 
     if today > date:
         lastDate = date + pd.Timedelta(days=1)
         caseScrape(lastDate)
 
-    else:
-        driver.close()
-        driver.quit()
-        for i, indice in enumerate(data.index):
-            data.at[indice, "total"] = data.at[indice, "new"] + data.iloc[0:i]["new"].sum()
-            data.at[indice, "recovered"] = data.at[indice, "total"] - data.at[indice, "active"] - data.iloc[0:i + 1]["dead"].sum()
-            data.at[indice, "average"] = data.iloc[max([i - 6, 0]):i + 1]["new"].sum() / 7
-        print("case data check complete; caseData.csv written")
-        data.to_csv("caseData.csv")
+def clean():
+    print()
+    print("cleaning irregular data ...")
+    for i, indice in enumerate(data.index):
+        data.at[indice, "total"] = data.at[indice, "new"] + data.iloc[0:i]["new"].sum()
+        data.at[indice, "recovered"] = data.at[indice, "total"] - data.at[indice, "active"] - data.iloc[0:i + 1]["dead"].sum()
+        data.at[indice, "average"] = data.iloc[max([i - 6, 0]):i + 1]["new"].sum() / 7
+    print("cleaning complete; caseData.csv written")
+    data.to_csv("caseData.csv")
 
 # CASE DATA
-
 print("checking existing case data ...")
 data = pd.read_csv("./caseData.csv", parse_dates=["date"], index_col="date")
 lastDate = data.index[-1] + pd.Timedelta(days=1)
@@ -94,9 +74,9 @@ if today < lastDate:
     print("case data is up-to-date")
 else:
     caseScrape(lastDate)
+    clean()
 
 # VACCINATION DATA
-
 vaxData = pd.DataFrame(
     index=["AUS", "ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
     columns=["first", "second"]
