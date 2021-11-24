@@ -3,6 +3,7 @@ import pandas as pd, numpy as np
 from PyPDF2 import PdfFileReader
 
 def vaxScrape(date):
+    print()
     print(f"checking vaccination data for {date:%B %-d, %Y} ...")
     url = f"https://www.health.gov.au/sites/default/files/documents/{date:%Y}/{date:%m}/covid-19-vaccine-rollout-update-{date:%-d-%B-%Y}.pdf".lower()
 
@@ -43,16 +44,28 @@ def vaxScrape(date):
 def caseScrape(date):
     print()
     print(f"Input case data for {date:%A, %B %-d, %Y}:")
-    data.at[date, "new"] = float(input("New cases:"))
-    data.at[date, "active"] = float(input("Active cases:"))
-    data.at[date, "hospitalised"] = float(input("In hospital:"))
-    data.at[date, "intensive care"] = float(input("In intensive care:"))
-    data.at[date, "ventilated"] = float(input("On ventilation:"))
-    data.at[date, "dead"] = float(input("Deaths in past day:"))
+    data.at[date, "new"] = float(input("New cases: "))
+    data.at[date, "active"] = float(input("Active cases: "))
+    data.at[date, "hospitalised"] = float(input("In hospital: "))
+    data.at[date, "intensive care"] = float(input("In intensive care: "))
+    data.at[date, "ventilated"] = float(input("On ventilation: "))
+    data.at[date, "dead"] = float(input("Deaths in past day: "))
+    data.at[date, "tests"] = float(input("Negative tests returned: "))
 
     if today > date:
-        lastDate = date + pd.Timedelta(days=1)
-        caseScrape(lastDate)
+        date = date + pd.Timedelta(days=1)
+        if today == date:
+            todayCase(date)
+        else:
+            caseScrape(date)
+
+def todayCase(date):
+    print()
+    ready = input("Are today's case data available yet? (Y/N) ")
+    if ready.lower() == "y":
+        caseScrape(date)
+    else:
+        print("Remember to check later today.")
 
 def clean():
     print()
@@ -68,13 +81,15 @@ def clean():
 print("checking existing case data ...")
 data = pd.read_csv("./caseData.csv", parse_dates=["date"], index_col="date")
 lastDate = data.index[-1] + pd.Timedelta(days=1)
-
 today = pd.to_datetime(pd.Timestamp("now").date())
+
 if today < lastDate:
     print("case data is up-to-date")
+elif today == lastDate:
+    todayCase(lastDate)
 else:
     caseScrape(lastDate)
-    clean()
+clean()
 
 # VACCINATION DATA
 vaxData = pd.DataFrame(
