@@ -1,6 +1,6 @@
-TITLE "COVID-19 case and vaccination update"
-
 @echo off
+
+title "COVID-19 case and vaccination update"
 
 git fetch --all
 git reset --hard origin/gh-pages
