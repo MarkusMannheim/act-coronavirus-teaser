@@ -9,3 +9,8 @@ git reset --hard origin/gh-pages
 
 @echo.
 py updateWin.py
+
+@echo.
+git add .
+git commit -m "update"
+git push
