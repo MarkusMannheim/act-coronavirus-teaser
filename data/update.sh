@@ -1,16 +1,11 @@
-@echo off
-title "COVID-19 case and vaccination update"
+#!/bin/bash
 
-@echo Starting COVID-19 case and vaccination update ...
-@echo.
+echo "ACT COVID-19 and vaccination update beginning"
+echo 
 
 git fetch --all
 git reset --hard origin/gh-pages
 
-@echo.
-py updateWin.py
+echo
 
-@echo.
-git add .
-git commit -m "update"
-git push
+python3 update.py
