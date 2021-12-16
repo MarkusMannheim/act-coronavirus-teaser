@@ -28,7 +28,7 @@ def vaxScrape(date):
 
             vaxData.iloc[i] = [first_16 + first_12, second_16 + second_12]
 
-        vaxData["population"] = [25704340, 431826, 8176368, 247023, 5206400, 1771703, 541965, 6648564, 2675797]
+        vaxData["population"] = [25739256, 432266, 8189266, 246338, 5221170, 1773243, 541479, 6649159, 2681633]
         vaxData["first_percent"] = vaxData["first"] / vaxData["population"]
         vaxData["second_percent"] = vaxData["second"] / vaxData["population"]
         vaxData.sort_values("second_percent", ascending=True, inplace=True)
