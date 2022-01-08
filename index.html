@@ -71,6 +71,10 @@
         .then(function(data) {
 
           // data
+          let latestDate = new Date(data[0][data[0].length - 1].date)
+          latestDate = new Date(latestDate.setDate(latestDate.getDate() - 28));
+          totalDeaths = d3.sum(data[0].map(function(d) { return +d.dead; }));
+
           caseData = data[0]
             .map(function(d) {
               let keys = Object.keys(d);
@@ -84,8 +88,6 @@
               return d;
             })
             .filter(function(d) {
-              let latestDate = new Date(data[0][data[0].length - 1].date)
-              latestDate = new Date(latestDate.setDate(latestDate.getDate() - 28));
               return d.date > latestDate;
             });
           caseData = caseData
@@ -183,7 +185,7 @@
               .text("The ACT outbreak has infected at least "
                 + d3.format(",.0f")(caseData.slice(-1)[0].total) + " people "
                 + "and is linked with "
-                + d3.format(",.0f")(d3.sum(caseData.map(d => d.dead))) + " deaths.");
+                + d3.format(",.0f")(totalDeaths) + " deaths.");
 
         } else if (selection == "cases") {
           x = d3.scaleBand()
