@@ -221,7 +221,7 @@
             .append("div")
               .attr("id", "notes")
               .text("These data were last updated on "
-                + d3.timeFormat("%A, %B %-d, %Y")(caseData.slice(-1)[0].date) + ".");
+                + d3.timeFormat("%B %-d, %Y")(caseData.slice(-1)[0].date) + ".");
 
         } else {
           x = d3.scaleLinear()
@@ -275,7 +275,7 @@
           };
           xAxis.tickSizeInner(margin.top + margin.bottom - height)
           if (width < 500) {
-            xAxis.ticks(4, "%b")
+            xAxis.ticks(4, "%b %-d")
               .tickPadding(5);
           } else {
             xAxis.ticks(5, "%b %-d")
@@ -314,7 +314,7 @@
             left: 40
           };
           yAxis.tickSizeInner(margin.left + margin.right - width);
-          xAxis.ticks(4, "%b");
+          xAxis.ticks(4, "%b %-d");
           if (width < 500) {
             xAxis.tickPadding(5);
           } else {
@@ -349,7 +349,7 @@
             left: 40
           };
           yAxis.tickSizeInner(margin.left + margin.right - width);
-          xAxis.ticks(4, "%b");
+          xAxis.ticks(4, "%b %-d");
           if (width < 500) {
             xAxis.tickPadding(5);
           } else {
