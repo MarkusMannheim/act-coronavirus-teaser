@@ -82,6 +82,11 @@
                 }
               }
               return d;
+            })
+            .filter(function(d) {
+              let latestDate = new Date(data[0][data[0].length - 1].date)
+              latestDate = new Date(latestDate.setDate(latestDate.getDate() - 28));
+              return d.date > latestDate;
             });
           caseData = caseData
             .map(function(d) {
@@ -306,7 +311,7 @@
             top: 8,
             right: 8,
             bottom: (width < 500 ? 16 : 24),
-            left: (width > 700 ? 32 : 24)
+            left: (width > 700 ? 40 : 32)
           };
           yAxis.tickSizeInner(margin.left + margin.right - width);
           xAxis.ticks(4, "%b");
@@ -465,7 +470,6 @@
           secondLabels.attr("x", function(d) {
               let firstBorder = +this.parentNode.querySelector(".firstLabel").getBBox().x;
               if (firstBorder < x(d.second)) {
-                console.log(firstBorder, x(d.second));
                 return firstBorder - 8;
               } else {
                 return x(d.second) - 8;
