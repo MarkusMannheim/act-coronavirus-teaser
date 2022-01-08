@@ -486,8 +486,8 @@
         tip.style("top", "0px")
           .style("left", "0px")
           .html("<h1> " + d3.timeFormat("%a, %b %-d")(d.date )+ "</h1>"
-            + "<p>new cases: <span class='cases'>" + d.new + "</span></p>"
-            + "<p>rolling average: <span class='average'>" + d3.format(".1f")(d.average) + "</span></p>");
+            + "<p>new cases: <span class='cases'>" + d3.format(",.0f")(d.new) + "</span></p>"
+            + "<p>rolling average: <span class='average'>" + d3.format(",.1f")(d.average) + "</span></p>");
         let tipDim = tip.node().getBoundingClientRect();
         tip.style("top", function() {
             if (y(d.average) + tipDim.height + 20 > height - margin.bottom) {
@@ -518,7 +518,7 @@
         tip.style("top", "0px")
           .style("left", "0px")
           .html("<h1> " + d3.timeFormat("%a, %b %-d")(d.date )+ "</h1>"
-            + "<p>active cases: <span class='active'>" + (d.active + d.hospitalised + d["intensive care"]) + "</span></p>" //  + d.ventilated
+            + "<p>active cases: <span class='active'>" + d3.format(",.0f")(d.active + d.hospitalised + d["intensive care"]) + "</span></p>" //  + d.ventilated
             + "<p>hospitalised: <span class='hospitalised'>" + (d.hospitalised + d["intensive care"]) + "</span></p>" //  + d.ventilated
             + "<p>intensive care: <span class='icu'>" + d["intensive care"] + "</span></p>" //  + d.ventilated)
             // + "<p>ventilated: <span class='ventilated'>" + d.ventilated + "</span></p>"
