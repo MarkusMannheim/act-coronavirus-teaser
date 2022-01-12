@@ -71,7 +71,7 @@
 
             <div id="outcomeLegend">
               <div class="legend" id="legendHospitalised">hospitalised</div>
-              <div class="legend" id="legendIntensiveCare">intensive care</div>
+              <div class="legend" id="legendIntensiveCare">ICU</div>
               <div class="legend" id="legendVentilated">ventilated</div>
               <div class="legend" id="legendDeaths">dead</div>
             </div>
@@ -88,7 +88,7 @@
       </div>
 
       <div id="notes">Infection data as of <span id='caseDate'></span>; vaccine data as of <span id='vaxDate'></span>.
-        Vaccination rates based on entire population as of June 2021.
+        Vaccinations based on whole-of-population population estimate for June 2021.
         Sources: ACT Health, federal Health Department, Australian Bureau of Statistics.</div>
     </div>
 
@@ -156,9 +156,9 @@
 
           // update info fields with dates
           lastCaseDate = caseData[caseData.length - 1].date;
-          caseDate.text(d3.timeFormat("%b %-d, %Y")(lastCaseDate));
+          caseDate.text(d3.timeFormat("%b %-d")(lastCaseDate));
           lastVaxDate = vaxData.date;
-          vaxDate.text(d3.timeFormat("%b %-d, %Y")(lastVaxDate));
+          vaxDate.text(d3.timeFormat("%b %-d")(lastVaxDate));
           infoActive.select(".valueBox")
             .text(d3.format(",")(caseData[caseData.length -1 ].active));
           reff = d3.mean(caseData.slice(-7).map(d => d.new)) / d3.mean(caseData.slice(-11, -4).map(d => d.new));
@@ -256,7 +256,7 @@
         vaccineDimensions = vaccineChart.node().getBoundingClientRect();
         vaxLabelHeight = document.querySelector(".vaxLabel").getBBox().height;
         d3.selectAll(".chartLabel")
-          .attr("y", 9);
+          .attr("y", 10);
 
         // draw outcomes chart
         outcomeMargin = { top: 0, right: 15, bottom: 12, left: 0 };
@@ -288,7 +288,7 @@
           .attr("y", vaccineMargin)
           .attr("width", function(d) { return vaccineX(d.value) - vaccineX(d.start); })
 
-        vaxLabels.attr("y", vaccineMargin + vaxLabelHeight)
+        vaxLabels.attr("y", vaccineMargin + 13)
           .attr("x", function(d) {
             return d.name == "boosted" ? 10 :
               d.name == "one dose" ? vaccineDimensions.width - 10 :

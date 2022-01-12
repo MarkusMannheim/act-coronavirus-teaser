@@ -123,7 +123,7 @@ h1, p {
   color: white;
   padding: .1rem;
   font-size: .7rem;
-  width: 85px;
+  width: 80px;
   text-align: center;
   margin-right: .25rem;
   border-radius: .25rem;
@@ -198,11 +198,11 @@ h1, p {
 }
 .axis .tick text {
   fill: #666;
-  font-size: .65rem;
+  font-size: .7rem;
 }
 .axis .tick line {
   stroke: #ccc;
-  stroke-dasharray: 3 2;
+  stroke-dasharray: 2 2;
 }
 .hospitalised .bar {
   fill: #8495a9;
@@ -229,7 +229,7 @@ h1, p {
   fill: #8495a9;
 }
 .chartLabel {
-  font-size: .75rem;
+  font-size: .8rem;
   fill: #333;
 }
 .vaxLabel {
@@ -242,4 +242,61 @@ h1, p {
 }
 .vaxLabel.onedose {
   fill: #333;
+}
+@media only screen and (max-width: 500px) {
+  #main {
+    flex-flow: column;
+  }
+  #infoDiv {
+    display: block;
+    border-right: none;
+    border-bottom: dashed 1px #999;
+    width: 100%;
+  }
+  #title {
+    font-size: 1rem;
+  }
+  #infoValues {
+    display: block;
+    height: auto;
+  }
+  .infoBox:first-child {
+    margin-top: .5rem;
+  }
+  #explain {
+    margin-top: 0;
+    font-size: .75rem;
+    position: absolute;
+    width: 6rem;
+    top: 2.5rem;
+    right: 1rem;
+    text-align: right;
+  }
+  #explain:hover {
+    color: #999;
+  }
+  .infoLabel {
+    font-size: .8rem;
+    line-height: .9rem;
+  }
+  .valueBox {
+    font-size: .9rem;
+    line-height: .9rem;
+  }
+  #subcontainer {
+    height: 100%;
+  }
+  #outcomeDiv {
+    border-bottom: dashed 1px #999;
+  }
+  #notes {
+    font-size: .7rem;
+  }
+  #explainWindow {
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    font-size: .8rem;
+    box-shadow: 3px 3px 10px #333;
+  }
 }
