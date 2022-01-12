@@ -1,4 +1,3 @@
-/* b: #009CBF o: #F75F00 g: #00A388 --tint-1: #333; --tint-2: #666; --tint-3: #999; --tint-4: #ccc; --tint-5: #e6e6e6; --tint-6: #f2f2f2; */
 @font-face {
  font-family: ABCSansNovaRegular;
  src: url(../fonts/ABCSansNova-Regular.otf);
@@ -21,361 +20,283 @@ body {
   margin-bottom: 1rem;
   overflow: hidden;
 }
+h1, p {
+  margin: 0;
+}
 #container {
   position: fixed;
   top: 0;
   right: 0;
   left: 0;
   bottom: 1rem;
-  padding: .5rem;
   display: flex;
   flex-flow: column;
+}
+#main {
+  display: flex;
+  flex-flow: row;
   background: #f2f2f2;
   border: solid 1pt #999;
-}
-#chart {
   height: 100%;
 }
-h1, p {
-  margin: 0;
-}
-#selector {
+#infoDiv {
+  padding: .5rem;
+  width: 210px;
   display: flex;
-  justify-content: center;
-  margin-bottom: .5rem;
+  flex-flow: column;
+  justify-content:flex-start;
+  border-right: dashed 1px #999;
 }
-#header {
-  text-align: center;
+#title {
   font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
-  font-size: 1.25rem;
-  margin-bottom: .5rem;
+  font-size: 1.1rem;
 }
-.choice {
+#infoValues {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  height: 100%;
+}
+.infoBox, #explain {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  margin-top: .25rem;
+}
+.infoBox:first-child {
+  margin-top: 0rem;
+}
+#explain {
+  margin-top: .5rem;
+  font-size: .8rem;
+  color: #999;
+  font-family: ABCSansNovaLight, "Arial Narrow", Helvetica, sans-serif;
+}
+#explain:hover {
+  color: #009de5;
+}
+.infoLabel {
+  font-size: .9rem;
+  line-height: 1rem;
+  margin-right: .25rem;
+}
+.valueBox {
+  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1rem;
+}
+.valueBox {
+  color: #037cc2;
+}
+.shrinking {
+  color: #2d8289;
+}
+.growing {
+  color: #cc4e00;
+}
+.neutral {
+  color: #68788e;
+}
+#subcontainer {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+}
+#outcomeDiv {
+  height: 100%;
+  padding: .5rem;
+  display: flex;
+  flex-flow: column
+}
+#outcomeChart {
+  width: 100%;
+  height: 100%;
+}
+#outcomeLegend {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  margin-top: .25rem;
+}
+.legend {
+  color: white;
+  padding: .1rem;
+  font-size: .7rem;
+  width: 80px;
+  text-align: center;
+  margin-right: .25rem;
+  border-radius: .25rem;
+}
+.legend:last-child {
+  margin-right: 0;
+}
+#legendHospitalised {
+  background: #8495a9;
+}
+#legendIntensiveCare {
+  background: #2d8289;
+}
+#legendVentilated {
+  background: #cc4e00;
+}
+#legendDeaths {
+  background: #333;
+}
+#vaccineDiv {
+  height: 3.5rem;
+  padding: .5rem;
+  display: flex;
+  flex-flow: column
+}
+#vaccineChart {
+  height: 100%;
+  width: 100%;
+}
+#notes {
+  color: #999;
+  font-size: .75rem;
+  padding: .5rem .5rem 0 .5rem;
+}
+#explainWindow {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
   background: white;
   color: #333;
-  padding: 2px 4px;
-  width: 100px;
-  text-align: center;
-  font-weight: bold;
-  font-size: .9rem;
-  border-radius: .5rem;
-  border: solid .5px #333;
-  margin-right: .5rem;
+  font-size: .85rem;
+  border-radius: .25rem;
+  box-shadow: 5px 5px 20px #333;
+  padding: .5rem;
 }
-.choice.selected, .choice.selected:hover {
-  background: #333;
-  color: white;
+#explainShield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
   pointer-events: none;
 }
-.choice:hover {
-  background: #FFB300;
-  color: #333;
+#explainShield.active {
+  display: block;
+  pointer-events: all;
 }
-.choice:last-child {
- margin-right: 0;
+#explainWindow p {
+  margin-bottom: .5rem;
+}
+#explainWindow p:last-child {
+  margin-bottom: 0;
+}
+.bold {
+  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
+  color: #666;
 }
 .axis .domain {
   stroke: none;
 }
-.axis .tick line {
-  stroke: #999;
-  stroke-dasharray: 2 3;
-}
 .axis .tick text {
+  fill: #666;
+  font-size: .7rem;
+}
+.axis .tick line {
+  stroke: #ccc;
+  stroke-dasharray: 2 2;
+}
+.hospitalised .bar {
+  fill: #8495a9;
+}
+.intensivecare .bar {
+  fill: #2d8289;
+}
+.ventilated .bar {
+  fill: #cc4e00;
+}
+.dead .bar {
   fill: #333;
-  font-size: .8rem;
 }
-.outcome {
-  pointer-events: none;
-}
-.outcome.dead {
-  fill: #333;
-}
-.outcome.ventilated {
-  fill: darkred;
-}
-.outcome.icu {
-  fill: red;
-}
-.outcome.hospitalised {
-  fill: #FF6100;
-}
-.outcome.active {
-  fill: #FFB300;
-}
-#footer {
-  margin-top: .5rem;
-  display: flex;
-  justify-content: center;
-}
-#footer .key {
-  padding: 1px 2px;
-  border-radius: .25rem;
-  font-weight: bold;
-  font-size: .9rem;
-  color: white;
-  width: 135px;
-  text-align: center;
-  margin-right: .5rem;
-}
-#footer .key:last-child {
-  margin-right: 0;
-}
-#footer .key.dead {
-  background: #333;
-}
-#footer .key.icu {
-  background: red;
-}
-#footer .key.hospitalised {
-  background: #FF6100;
-}
-#footer .key.second {
-  background: #FF6100;
-}
-#footer .key.active {
-  background: #FFB300;
-  color: #333;
-}
-#tip span.active {
-  color: #333;
-}
-#tip span.hospitalised {
-  color: #F75F00;
-}
-#tip span.icu {
-  color: red;
-}
-#tip span.ventilated {
-  color: darkred;
-}
-#tip span.dead {
-  color: #333;
-}
-#footer .key.first {
-  background: #FFB300;
-  color: #333;
-}
-#averageLine {
-  stroke: #FF6100;
-  stroke-width: 4;
-  stroke-linecap: round;
-  fill: none;
-  pointer-events: none;
-}
-#footer .key.average {
-  background: #FF6100;
-}
-#footer .key.cases {
-  background: #248BC9;
-}
-.caseBar {
-  fill: #248BC9;
-  stroke-width: .5;
-  stroke: white;
-  pointer-events: none;
-}
-.backgroundBar {
+#vaccineBackground {
   fill: #e6e6e6;
 }
-.secondBar {
-  fill: #FF6100;
-  pointer-events: none;
+.vaxBar.boosted {
+  fill: #cc4e00;
 }
-.firstBar {
-  fill: #FFB300;
-  pointer-events: none;
+.vaxBar.twodoses {
+  fill: #037cc2;
 }
-#yAxisGroup .tick text.vax {
-  fill: white;
-  text-anchor: start;
-  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
-  font-size: 1rem;
+.vaxBar.onedose {
+  fill: #8495a9;
 }
-#notes {
-  text-align: center;
-  margin-top: .5rem;
-  font-size: .9rem;
-  color: #666;
-}
-.barLabel {
-  text-anchor: end;
-  alignment-baseline: central;
-  font-size: .85rem;
-  pointer-events: none;
-}
-.firstLabel {
+.chartLabel {
+  font-size: .8rem;
   fill: #333;
 }
-.secondLabel {
+.vaxLabel {
+  font-size: .7rem;
   fill: white;
+  text-anchor: end;
 }
-.touchBar {
-  fill: rgba(0, 0, 0, 0);
+.vaxLabel.boosted {
+  text-anchor: start;
 }
-.barGroup.selected .caseBar {
-  fill: #FFB300;
-}
-#tip {
-  position: absolute;
-  opacity: 0;
-  color: #333;
-  background: white;
-  box-shadow: 1px 1px 4px #666;
-  padding: 3px 6px;
-  border-radius: .25rem;
-  pointer-events: none;
-}
-#tip h1 {
-  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
-  font-size: .85rem;
-}
-#tip p {
-  font-weight: normal;
-  font-size: .8rem;
-}
-#tip span {
-  font-weight: bold;
-}
-#tip span.cases {
-  color: #248BC9;
-}
-#tip span.average {
-  color: #F75F00;
-}
-.outcomePoint {
-  fill: #FFB300;
-  stroke: #333;
-  pointer-events: none;
-  opacity: 0;
-}
-.outcomeLine {
-  stroke: #333;
-  stroke-dasharray: 4 2;
-  pointer-events: none;
-  opacity: 0;
-}
-.outcomeCell {
-  fill: rgba(0, 0, 0, 0);
-}
-.outcomeMarker.selected .outcomePoint, .outcomeMarker.selected .outcomeLine {
-  opacity: 1;
+.vaxLabel.onedose {
+  fill: #333;
 }
 @media only screen and (max-width: 500px) {
-  #selector {
-    margin-bottom: .25rem;
+  #main {
+    flex-flow: column;
   }
-  #header {
-    font-size: 1.15rem;
-    margin-bottom: .25rem;
+  #infoDiv {
+    display: block;
+    border-right: none;
+    border-bottom: dashed 1px #999;
+    width: 100%;
   }
-  .choice {
-    padding: 1px 3px;
-    font-size: .85rem;
-    border-radius: .5rem;
-    margin-right: .25rem;
+  #title {
+    font-size: 1rem;
   }
-  .axis .tick text {
-    font-size: .75rem;
+  #infoValues {
+    display: block;
+    height: auto;
   }
-  #footer {
+  .infoBox:first-child {
+    margin-top: .5rem;
+  }
+  #explain {
     margin-top: 0;
-    display: flex;
-    flex-flow: wrap;
-    justify-content: center;
-  }
-  #footer .key {
-    margin-top: .25rem;
-    margin-right: .25rem;
-    font-size: .85rem;
-  }
-  #averageLine {
-    stroke-width: 3;
-  }
-  .caseBar {
-    stroke-width: .25;
-  }
-  #yAxisGroup .tick text.vax {
-    font-size: .9rem;
-  }
-  #notes {
-    font-size: .8rem;
-  }
-  .barLabel {
-    font-size: .8rem;
-  }
-  #tip {
+    font-size: .75rem;
     position: absolute;
-    opacity: 0;
-    color: #333;
-    background: white;
-    box-shadow: 1px 1px 4px #666;
-    padding: 3px 6px;
-    border-radius: .25rem;
-    pointer-events: none;
+    width: 6rem;
+    top: 2.5rem;
+    right: 1rem;
+    text-align: right;
   }
-}
-@media only screen and (min-width: 750px) {
-  body {
-    margin-bottom: 0;
+  #explain:hover {
+    color: #999;
   }
-  #container {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 750px;
-    height: 550px;
-    padding: 1rem;
+  .infoLabel {
+    font-size: .8rem;
+    line-height: .9rem;
   }
-  #selector {
-    margin-bottom: 1rem;
-  }
-  #header {
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
-  }
-  .choice {
-    padding: 3px 6px;
-    width: 150px;
-    font-size: 1.1rem;
-    border-radius: .75rem;
-    margin-right: 1rem;
-  }
-  .axis .tick text {
+  .valueBox {
     font-size: .9rem;
+    line-height: .9rem;
   }
-  #footer {
-    margin-top: 1rem;
+  #subcontainer {
+    height: 100%;
   }
-  #footer .key {
-    padding: 2px 4px;
-    border-radius: .5rem;
-    font-size: 1rem;
-    width: 150px;
-    margin-right: 1rem;
-  }
-  #averageLine {
-    stroke-width: 6;
-  }
-  #yAxisGroup .tick text.vax {
-    font-size: 1.5rem;
+  #outcomeDiv {
+    border-bottom: dashed 1px #999;
   }
   #notes {
-    margin-top: 1rem;
-    font-size: 1rem;
+    font-size: .7rem;
   }
-  .barLabel {
-    font-size: 1rem;
-  }
-  #tip {
-    padding: 4px 8px;
-    border-radius: .5rem;
-  }
-  #tip h1 {
-    font-size: 1rem;
-  }
-  #tip p {
-    font-weight: normal;
-    font-size: .9rem;
+  #explainWindow {
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    font-size: .8rem;
+    box-shadow: 3px 3px 10px #333;
   }
 }
