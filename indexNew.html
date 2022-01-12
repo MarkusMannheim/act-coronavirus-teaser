@@ -65,7 +65,7 @@
                 <g id="outcomeYAxisGroup" class="axis"></g>
               </g>
               <g id="outcomeChartGroup">
-                <text class="chartLabel">HEALTH OUTCOMES</text>
+                <text class="chartLabel">OUTCOMES:</text>
               </g>
             </svg>
 
@@ -80,7 +80,7 @@
             <svg id="vaccineChart" width=0 height=0>
               <g id="vaccineChartGroup">
                 <rect id="vaccineBackground"></rect>
-                <text class="chartLabel">VACCINATIONS</text>
+                <text class="chartLabel">VACCINATIONS:</text>
               </g>
             </svg>
           </div>
@@ -88,7 +88,7 @@
       </div>
 
       <div id="notes">Infection data as of <span id='caseDate'></span>; vaccine data as of <span id='vaxDate'></span>.
-        Vaccination rates based on June 2021 population estimates.
+        Vaccination rates based on entire population as of June 2021.
         Sources: ACT Health, federal Health Department, Australian Bureau of Statistics.</div>
     </div>
 
@@ -232,18 +232,12 @@
               .data(vaccineData)
             .enter().append("rect")
               .attr("class", function(d) { return d.name.replace(" ", "") + " vaxBar"; })
-          labelText = vaccineChartGroup
-            .selectAll(".labelText")
+          vaxLabels = vaccineChartGroup
+            .selectAll(".vaxLabel")
               .data(vaccineData)
             .enter().append("text")
-              .attr("class", function(d) { return d.name.replace(" ", "") + " labelText"; })
-              .text(function(d) { return d.name; });
-          labelValue = vaccineChartGroup
-            .selectAll(".labelValue")
-              .data(vaccineData)
-            .enter().append("text")
-              .attr("class", function(d) { return d.name.replace(" ", "") + " labelValue"; })
-              .text(function(d) { return d3.format(".1%")(d.value / 432266); })
+              .attr("class", function(d) { return d.name.replace(" ", "") + " vaxLabel"; })
+              .text(function(d) { return d.name + ": " + d3.format(".1%")(d.value / 432266); });
 
           // pause then resize
           d3.timeout(function() {
@@ -260,6 +254,7 @@
         dimensions = subcontainerDiv.node().getBoundingClientRect();
         outcomeDimensions = outcomeChart.node().getBoundingClientRect();
         vaccineDimensions = vaccineChart.node().getBoundingClientRect();
+        vaxLabelHeight = document.querySelector(".vaxLabel").getBBox().height;
         d3.selectAll(".chartLabel")
           .attr("y", 9);
 
@@ -291,7 +286,16 @@
         vaxBars.attr("height", vaccineDimensions.height - vaccineMargin)
           .attr("x", function(d) { return vaccineX(d.start); })
           .attr("y", vaccineMargin)
-          .attr("width", function(d) { console.log(d.value, d.start); return vaccineX(d.value) - vaccineX(d.start); })
+          .attr("width", function(d) { return vaccineX(d.value) - vaccineX(d.start); })
+
+        vaxLabels.attr("y", vaccineMargin + vaxLabelHeight)
+          .attr("x", function(d) {
+            return d.name == "boosted" ? 10 :
+              d.name == "one dose" ? vaccineDimensions.width - 10 :
+              0;
+          });
+        d3.select(".vaxLabel.twodoses")
+          .attr("x", document.querySelector(".vaxLabel.onedose").getBBox().x - 10);
       }
     </script>
   </body>

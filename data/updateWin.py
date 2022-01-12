@@ -19,15 +19,28 @@ def vax(date):
             second_16 = float(contents[contents.index("dose 2") + 2].strip().replace(",", ""))
             first_12 = float(contents[len(contents) - contents[::-1].index("dose 1") + 1].strip().replace(",", ""))
             second_12 = float(contents[len(contents) - contents[::-1].index("dose 2") + 1].strip().replace(",", ""))
+            count = 0
+            for i, string in enumerate(contents):
+                if string == "dose 1":
+                    count = count + 1
+                    if count == 2:
+                        first_5 = float(contents[i + 2].strip().replace(",", ""))
+                        break
 
         except:
             first_16 = float(contents[contents.index("-dose 1") + 2].strip().replace(",", ""))
             second_16 = float(contents[contents.index("-dose 2") + 2].strip().replace(",", ""))
             first_12 = float(contents[len(contents) - contents[::-1].index("-dose 1") + 1].strip().replace(",", ""))
             second_12 = float(contents[len(contents) - contents[::-1].index("-dose 2") + 1].strip().replace(",", ""))
+            count = 0
+            for i, string in enumerate(contents):
+                if string == "-dose 1":
+                    count = count + 1
+                    if count == 2:
+                        first_5 = float(contents[i + 2].strip().replace(",", ""))
+                        break
 
-        print(first_16, first_12, second_16, second_12)
-        first = first_16 + first_12
+        first = first_16 + first_12 + first_5
         second = second_16 + second_12
 
         contents = reader.getPage(2).extractText().split("\n")

@@ -105,7 +105,7 @@ h1, p {
 }
 #outcomeDiv {
   height: 100%;
-  padding: .5rem .5rem 0 .5rem;
+  padding: .5rem;
   display: flex;
   flex-flow: column
 }
@@ -222,10 +222,24 @@ h1, p {
 .vaxBar.boosted {
   fill: #cc4e00;
 }
-.vaxBar.2doses {
+.vaxBar.twodoses {
   fill: #037cc2;
+}
+.vaxBar.onedose {
+  fill: #8495a9;
 }
 .chartLabel {
   font-size: .75rem;
+  fill: #333;
+}
+.vaxLabel {
+  font-size: .7rem;
+  fill: white;
+  text-anchor: end;
+}
+.vaxLabel.boosted {
+  text-anchor: start;
+}
+.vaxLabel.onedose {
   fill: #333;
 }
