@@ -17,7 +17,7 @@
   box-sizing: border-box;
 }
 body {
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
   overflow: hidden;
 }
 h1, p {
@@ -41,15 +41,15 @@ h1, p {
 }
 #infoDiv {
   padding: .5rem;
-  width: 210px;
+  width: 225px;
   display: flex;
   flex-flow: column;
   justify-content:flex-start;
-  border-right: dashed 1px #999;
+  border-right: solid 1px #999;
 }
 #title {
   font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 #infoValues {
   display: flex;
@@ -68,34 +68,34 @@ h1, p {
 }
 #explain {
   margin-top: .5rem;
-  font-size: .8rem;
-  color: #999;
+  font-size: .85rem;
+  color: #666;
   font-family: ABCSansNovaLight, "Arial Narrow", Helvetica, sans-serif;
 }
 #explain:hover {
   color: #009de5;
 }
 .infoLabel {
-  font-size: .9rem;
-  line-height: 1rem;
+  font-size: .95rem;
+  line-height: 1.1rem;
   margin-right: .25rem;
 }
 .valueBox {
   font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
-  font-size: 1rem;
-  line-height: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.1rem;
 }
 .valueBox {
   color: #037cc2;
 }
 .shrinking {
-  color: #2d8289;
+  color: #007a51;
 }
 .growing {
-  color: #cc4e00;
+  color: #e11f30;
 }
 .neutral {
-  color: #68788e;
+  color: #999;
 }
 #subcontainer {
   width: 100%;
@@ -107,7 +107,8 @@ h1, p {
   height: 100%;
   padding: .5rem;
   display: flex;
-  flex-flow: column
+  flex-flow: column;
+  border-bottom: solid 1px #999;
 }
 #outcomeChart {
   width: 100%;
@@ -122,7 +123,7 @@ h1, p {
 .legend {
   color: white;
   padding: .1rem;
-  font-size: .7rem;
+  font-size: .75rem;
   width: 80px;
   text-align: center;
   margin-right: .25rem;
@@ -132,13 +133,14 @@ h1, p {
   margin-right: 0;
 }
 #legendHospitalised {
-  background: #8495a9;
+  background: #FFB300;
+  color: #333;
 }
 #legendIntensiveCare {
-  background: #2d8289;
+  background: #f26d00;
 }
 #legendVentilated {
-  background: #cc4e00;
+  background: #e11f30;
 }
 #legendDeaths {
   background: #333;
@@ -154,8 +156,8 @@ h1, p {
   width: 100%;
 }
 #notes {
-  color: #999;
-  font-size: .75rem;
+  color: #666;
+  font-size: .7rem;
   padding: .5rem .5rem 0 .5rem;
 }
 #explainWindow {
@@ -165,7 +167,7 @@ h1, p {
   right: 1.5rem;
   background: white;
   color: #333;
-  font-size: .85rem;
+  font-size: .9rem;
   border-radius: .25rem;
   box-shadow: 5px 5px 20px #333;
   padding: .5rem;
@@ -205,13 +207,13 @@ h1, p {
   stroke-dasharray: 2 2;
 }
 .hospitalised .bar {
-  fill: #8495a9;
+  fill: #FFB300;
 }
 .intensivecare .bar {
-  fill: #2d8289;
+  fill: #f26d00;
 }
 .ventilated .bar {
-  fill: #cc4e00;
+  fill: #e11f30;
 }
 .dead .bar {
   fill: #333;
@@ -220,20 +222,21 @@ h1, p {
   fill: #e6e6e6;
 }
 .vaxBar.boosted {
-  fill: #00238b;
+  fill: #1c64b8;
 }
 .vaxBar.twodoses {
-  fill: #037cc2;
+  fill: #009de5;
 }
 .vaxBar.onedose {
-  fill: #8495a9;
+  fill: #ccc;
 }
 .chartLabel {
-  font-size: .8rem;
+  font-size: .85rem;
+  font-weight: bold;
   fill: #333;
 }
 .vaxLabel {
-  font-size: .7rem;
+  font-size: .75rem;
   fill: white;
   text-anchor: end;
 }
@@ -250,11 +253,11 @@ h1, p {
   #infoDiv {
     display: block;
     border-right: none;
-    border-bottom: dashed 1px #999;
+    border-bottom: solid 1px #999;
     width: 100%;
   }
   #title {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   #infoValues {
     display: block;
@@ -265,10 +268,10 @@ h1, p {
   }
   #explain {
     margin-top: 0;
-    font-size: .75rem;
+    font-size: .85rem;
     position: absolute;
     width: 6rem;
-    top: 2.5rem;
+    top: 3rem;
     right: 1rem;
     text-align: right;
   }
@@ -276,27 +279,24 @@ h1, p {
     color: #999;
   }
   .infoLabel {
-    font-size: .8rem;
-    line-height: .9rem;
+    font-size: .9rem;
+    line-height: 1rem;
   }
   .valueBox {
-    font-size: .9rem;
-    line-height: .9rem;
+    font-size: 1rem;
+    line-height: 1rem;
   }
   #subcontainer {
     height: 100%;
   }
-  #outcomeDiv {
-    border-bottom: dashed 1px #999;
-  }
   #notes {
-    font-size: .7rem;
+    font-size: .65rem;
   }
   #explainWindow {
     top: 1rem;
     left: 1rem;
     right: 1rem;
-    font-size: .8rem;
+    font-size: .85rem;
     box-shadow: 3px 3px 10px #333;
   }
 }
