@@ -1,8 +1,3 @@
-/*
-b: #009CBF
-o: #F75F00
-g: #00A388
-*/
 @font-face {
  font-family: ABCSansNovaRegular;
  src: url(../fonts/ABCSansNova-Regular.otf);
@@ -25,15 +20,212 @@ body {
   margin-bottom: 1rem;
   overflow: hidden;
 }
+h1, p {
+  margin: 0;
+}
 #container {
   position: fixed;
   top: 0;
   right: 0;
   left: 0;
   bottom: 1rem;
-  padding: .5rem;
   display: flex;
   flex-flow: column;
+}
+#main {
+  display: flex;
+  flex-flow: row;
   background: #f2f2f2;
   border: solid 1pt #999;
+  height: 100%;
+}
+#infoDiv {
+  padding: .5rem;
+  width: 210px;
+  display: flex;
+  flex-flow: column;
+  justify-content:flex-start;
+  border-right: dashed 1px #999;
+}
+#title {
+  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
+  font-size: 1.1rem;
+}
+#infoValues {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  height: 100%;
+}
+.infoBox, #explain {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  margin-top: .25rem;
+}
+.infoBox:first-child {
+  margin-top: 0rem;
+}
+#explain {
+  margin-top: .5rem;
+  font-size: .8rem;
+  color: #999;
+  font-family: ABCSansNovaLight, "Arial Narrow", Helvetica, sans-serif;
+}
+#explain:hover {
+  color: #009de5;
+}
+.infoLabel {
+  font-size: .9rem;
+  line-height: 1rem;
+  margin-right: .25rem;
+}
+.valueBox {
+  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1rem;
+}
+.valueBox {
+  color: #037cc2;
+}
+.shrinking {
+  color: #2d8289;
+}
+.growing {
+  color: #cc4e00;
+}
+.neutral {
+  color: #68788e;
+}
+#subcontainer {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+}
+#outcomeDiv {
+  height: 100%;
+  padding: .5rem .5rem 0 .5rem;
+  display: flex;
+  flex-flow: column
+}
+#outcomeChart {
+  width: 100%;
+  height: 100%;
+}
+#outcomeLegend {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  margin-top: .25rem;
+}
+.legend {
+  color: white;
+  padding: .1rem;
+  font-size: .7rem;
+  width: 85px;
+  text-align: center;
+  margin-right: .25rem;
+  border-radius: .25rem;
+}
+.legend:last-child {
+  margin-right: 0;
+}
+#legendHospitalised {
+  background: #8495a9;
+}
+#legendIntensiveCare {
+  background: #2d8289;
+}
+#legendVentilated {
+  background: #cc4e00;
+}
+#legendDeaths {
+  background: #333;
+}
+#vaccineDiv {
+  height: 3.5rem;
+  padding: .5rem;
+  display: flex;
+  flex-flow: column
+}
+#vaccineChart {
+  height: 100%;
+  width: 100%;
+}
+#notes {
+  color: #999;
+  font-size: .75rem;
+  padding: .5rem .5rem 0 .5rem;
+}
+#explainWindow {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  background: white;
+  color: #333;
+  font-size: .85rem;
+  border-radius: .25rem;
+  box-shadow: 5px 5px 20px #333;
+  padding: .5rem;
+}
+#explainShield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  pointer-events: none;
+}
+#explainShield.active {
+  display: block;
+  pointer-events: all;
+}
+#explainWindow p {
+  margin-bottom: .5rem;
+}
+#explainWindow p:last-child {
+  margin-bottom: 0;
+}
+.bold {
+  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
+  color: #666;
+}
+.axis .domain {
+  stroke: none;
+}
+.axis .tick text {
+  fill: #666;
+  font-size: .65rem;
+}
+.axis .tick line {
+  stroke: #ccc;
+  stroke-dasharray: 3 2;
+}
+.hospitalised .bar {
+  fill: #8495a9;
+}
+.intensivecare .bar {
+  fill: #2d8289;
+}
+.ventilated .bar {
+  fill: #cc4e00;
+}
+.dead .bar {
+  fill: #333;
+}
+#vaccineBackground {
+  fill: #e6e6e6;
+}
+.vaxBar.boosted {
+  fill: #cc4e00;
+}
+.vaxBar.2doses {
+  fill: #037cc2;
+}
+.chartLabel {
+  font-size: .75rem;
+  fill: #333;
 }
