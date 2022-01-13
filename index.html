@@ -35,55 +35,32 @@
 
   <body>
     <div id="container">
-      <div id="main">
+      <div id="subcontainer">
+        <div id="outcomeDiv">
+          <svg id="outcomeChart" width=0 height=0>
+            <g id="outcomeAxisGroup">
+              <g id="outcomeXAxisGroup" class="axis"></g>
+              <g id="outcomeYAxisGroup" class="axis"></g>
+            </g>
+            <g id="outcomeChartGroup">
+              <text class="chartLabel">ACT HEALTH OUTCOMES:</text>
+            </g>
+          </svg>
 
-        <div id="infoDiv">
-          <div id="title">ACT COVID-19 UPDATE</div>
-
-          <div id="infoValues">
-            <div id="infoActive" class="infoBox">
-              <div class="infoLabel">active cases:</div>
-              <div class="valueBox"></div>
-            </div>
-            <div id="infoTrend" class="infoBox">
-              <div class="infoLabel">disease growth:</div>
-              <div class="valueBox"></div>
-            </div>
-            <div id="infoRate" class="infoBox">
-              <div class="infoLabel">test positivity:</div>
-              <div class="valueBox"></div>
-            </div>
-            <div id="explain" onclick="explainSwitch()">What do these mean?</div>
+          <div id="outcomeLegend">
+            <div class="legend" id="legendHospitalised">hospitalised</div>
+            <div class="legend" id="legendIntensiveCare">ICU</div>
+            <div class="legend" id="legendVentilated">ventilated</div>
+            <div class="legend" id="legendDeaths">dead</div>
           </div>
         </div>
-
-        <div id="subcontainer">
-          <div id="outcomeDiv">
-            <svg id="outcomeChart" width=0 height=0>
-              <g id="outcomeAxisGroup">
-                <g id="outcomeXAxisGroup" class="axis"></g>
-                <g id="outcomeYAxisGroup" class="axis"></g>
-              </g>
-              <g id="outcomeChartGroup">
-                <text class="chartLabel">OUTCOMES:</text>
-              </g>
-            </svg>
-
-            <div id="outcomeLegend">
-              <div class="legend" id="legendHospitalised">hospitalised</div>
-              <div class="legend" id="legendIntensiveCare">ICU</div>
-              <div class="legend" id="legendVentilated">ventilated</div>
-              <div class="legend" id="legendDeaths">dead</div>
-            </div>
-          </div>
-          <div id="vaccineDiv">
-            <svg id="vaccineChart" width=0 height=0>
-              <g id="vaccineChartGroup">
-                <rect id="vaccineBackground"></rect>
-                <text class="chartLabel">VACCINATIONS:</text>
-              </g>
-            </svg>
-          </div>
+        <div id="vaccineDiv">
+          <svg id="vaccineChart" width=0 height=0>
+            <g id="vaccineChartGroup">
+              <rect id="vaccineBackground"></rect>
+              <text class="chartLabel">VACCINATIONS:</text>
+            </g>
+          </svg>
         </div>
       </div>
 
@@ -92,21 +69,10 @@
         Sources: ACT Health, federal Health Department, Australian Bureau of Statistics.</div>
     </div>
 
-    <div id="explainShield" onclick="explainSwitch()">
-      <div id="explainWindow">
-        <p><span class="bold">Active cases</span> are the number of people in Canberra known to be infected.</p>
-        <p><span class="bold">Disease growth</span> is the effective reproduction number (Reff). The outbreak is <span class="growing">growing</span> if the Reff is above 1, and <span class="shrinking">shrinking</span> if it is below 1.</p>
-        <p><span class="bold">Test positivity</span> shows how many people who received a PCR result in the past five days had COVID-19. An outbreak is regarded as "under control" if positivity is below 5%.</p>
-      </div>
-    </div>
-
     <script>
       // page elements
       container = d3.select("#container");
-      main = d3.select("#main");
-      infoDiv = d3.select("#infoDiv");
-      infoValues = d3.select("#infoValues");
-      subcontainerDiv = d3.select("#subcontainer");
+      subcontainer = d3.select("#subcontainer");
       outcomeDiv = d3.select("#outcomeDiv");
       outcomeChart = d3.select("#outcomeChart");
       outcomeChartGroup = d3.select("#outcomeChartGroup");
@@ -119,11 +85,6 @@
       vaccineBackground = d3.select("#vaccineBackground");
       caseDate = d3.select("#caseDate");
       vaxDate = d3.select("#vaxDate");
-      infoActive = d3.select("#infoActive");
-      infoTrend = d3.select("#infoTrend");
-      infoRate = d3.select("#infoRate");
-      explainShield = d3.select("#explainShield");
-      explainWindow = d3.select("#explainWindow");
 
       // load data
       Promise.all([
@@ -159,20 +120,11 @@
           caseDate.text(d3.timeFormat("%b %-d")(lastCaseDate));
           lastVaxDate = vaxData.date;
           vaxDate.text(d3.timeFormat("%b %-d")(lastVaxDate));
-          infoActive.select(".valueBox")
-            .text(d3.format(",")(caseData[caseData.length -1 ].active));
-          reff = d3.mean(caseData.slice(-7).map(d => d.new)) / d3.mean(caseData.slice(-11, -4).map(d => d.new));
-          reffState = reff > 1.1 ? "growing" : reff > .9 ? "neutral" : "shrinking";
-          infoTrend.select(".valueBox")
-            .text(d3.format(".1f")(reff))
-            .classed(reffState, true);
-          infoRate.select(".valueBox")
-            .text(d3.format(".1%")(d3.mean(caseData.slice(-5).map(d => d.positivity))));
 
           // draw outcome chart
           chartData = caseData
             .filter(function(d) {
-              return lastCaseDate - d.date < (28 * 24 * 60 * 60 * 1000);
+               return lastCaseDate - d.date < (28 * 24 * 60 * 60 * 1000);
             })
             .map(function(d) {
               return {
@@ -245,22 +197,17 @@
             resize();
             d3.timeout(function() {
               resize();
-            }, 1000);
+            }, 500);
           }, 500);
 
         });
 
-      function explainSwitch() {
-        explainShield.classed("active", !explainShield.classed("active"));
-      }
-
       function resize() {
-        dimensions = subcontainerDiv.node().getBoundingClientRect();
         outcomeDimensions = outcomeChart.node().getBoundingClientRect();
         vaccineDimensions = vaccineChart.node().getBoundingClientRect();
         vaxLabelHeight = document.querySelector(".vaxLabel").getBBox().height;
         d3.selectAll(".chartLabel")
-          .attr("y", 10);
+          .attr("y", 12);
 
         // draw outcomes chart
         outcomeMargin = { top: 0, right: 15, bottom: 12, left: 0 };
@@ -282,7 +229,7 @@
 
         // draw vaccine bar
         vaccineX.range([0, vaccineDimensions.width]);
-        vaccineMargin = 15;
+        vaccineMargin = 17;
 
         vaccineBackground.attr("width", vaccineDimensions.width)
           .attr("height", vaccineDimensions.height - vaccineMargin)
@@ -292,14 +239,14 @@
           .attr("y", vaccineMargin)
           .attr("width", function(d) { return vaccineX(d.value) - vaccineX(d.start); })
 
-        vaxLabels.attr("y", vaccineMargin + 16)
+        vaxLabels.attr("y", vaccineMargin + (document.body.getBoundingClientRect().width < 500 ? 18 : 16))
           .attr("x", function(d) {
             return d.name == "boosted" ? 10 :
               d.name == "one dose" ? vaccineDimensions.width - 10 :
               0;
           });
         d3.select(".vaxLabel.twodoses")
-          .attr("x", document.querySelector(".vaxLabel.onedose").getBBox().x - 10);
+          .attr("x", d3.min([document.querySelector(".vaxLabel.onedose").getBBox().x, document.querySelector(".vaxBar.twodoses").getBBox().width + document.querySelector(".vaxBar.twodoses").getBBox().x]) - 10);
       }
     </script>
   </body>
