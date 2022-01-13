@@ -243,6 +243,9 @@
           d3.timeout(function() {
             window.addEventListener("resize", resize);
             resize();
+            d3.timeout(function() {
+              resize();
+            }, 1000);
           }, 500);
 
         });
