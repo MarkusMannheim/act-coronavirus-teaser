@@ -241,6 +241,7 @@
 
           // pause then resize
           d3.timeout(function() {
+            window.addEventListener("resize", resize);
             resize();
           }, 500);
 
