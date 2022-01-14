@@ -87,6 +87,7 @@ def checkToday(date):
 
         else:
             print("Remember to check later today.")
+            clean()
 
     else:
         cases(date)
