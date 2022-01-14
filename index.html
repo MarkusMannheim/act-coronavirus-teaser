@@ -210,7 +210,7 @@
           .attr("y", 12);
 
         // draw outcomes chart
-        outcomeMargin = { top: 0, right: 15, bottom: 12, left: 0 };
+        outcomeMargin = { top: 0, right: 15, bottom: 12, left: 10 };
         outcomeX.range([outcomeMargin.left + outcomeXBars.bandwidth() / 2, outcomeDimensions.width - outcomeMargin.right -  + outcomeXBars.bandwidth() / 2]);
         outcomeXBars.range([outcomeMargin.left, outcomeDimensions.width - outcomeMargin.right]);
         outcomeY.range([outcomeDimensions.height - outcomeMargin.bottom, outcomeMargin.top]);
