@@ -61,7 +61,8 @@ def cases(date):
     print()
     print(f"Input case data for {date:%A, %B %#d, %Y}:")
     caseData.at[date, "dead"] = float(input("Deaths in past day: "))
-    caseData.at[date, "new"] = float(input("New cases: "))
+    caseData.at[date, "pcr"] = float(input("New cases from PCR tests: "))
+    caseData.at[date, "rat"] = float(input("New cases from RATs: "))
     caseData.at[date, "active"] = float(input("Active cases: "))
     caseData.at[date, "hospitalised"] = float(input("In hospital: "))
     caseData.at[date, "intensive care"] = float(input("In intensive care: "))
@@ -93,6 +94,7 @@ def checkToday(date):
 def clean():
     print()
     print("Cleaning irregular data ...")
+    caseData["new"] = caseData["pcr"] + caseData["rat"]
     for i, date in enumerate(caseData.index):
         caseData.at[date, "total"] = caseData.at[date, "new"] + caseData.iloc[0:i]["new"].sum()
         caseData.at[date, "recovered"] = caseData.at[date, "total"] - caseData.at[date, "active"] - caseData.iloc[0:i + 1]["dead"].sum()
