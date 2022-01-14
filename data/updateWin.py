@@ -99,7 +99,7 @@ def clean():
         caseData.at[date, "total"] = caseData.at[date, "new"] + caseData.iloc[0:i]["new"].sum()
         caseData.at[date, "recovered"] = caseData.at[date, "total"] - caseData.at[date, "active"] - caseData.iloc[0:i + 1]["dead"].sum()
         caseData.at[date, "average"] = caseData.iloc[max([i - 6, 0]):i + 1]["new"].sum() / 7
-        caseData.at[date, "positivity"] = caseData.at[date, "new"] / (caseData.at[date, "new"] + caseData.at[date, "tests"]) if pd.notna(caseData.at[date, "tests"]) else np.nan
+        caseData.at[date, "positivity"] = caseData.at[date, "pcr"] / (caseData.at[date, "pcr"] + caseData.at[date, "tests"]) if pd.notna(caseData.at[date, "tests"]) else np.nan
 
     print("Cleaning complete; caseData.csv written to file.")
     caseData.to_csv("caseData.csv")
