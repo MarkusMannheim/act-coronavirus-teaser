@@ -67,7 +67,6 @@ def cases(date):
     caseData.at[date, "hospitalised"] = float(input("In hospital: "))
     caseData.at[date, "intensive care"] = float(input("In intensive care: "))
     caseData.at[date, "ventilated"] = float(input("On ventilation: "))
-    caseData.at[date, "tests"] = float(input("Negative tests returned: "))
 
     if today > date:
         checkToday(date + pd.Timedelta(days=1))
@@ -100,7 +99,6 @@ def clean():
         caseData.at[date, "total"] = caseData.at[date, "new"] + caseData.iloc[0:i]["new"].sum()
         caseData.at[date, "recovered"] = caseData.at[date, "total"] - caseData.at[date, "active"] - caseData.iloc[0:i + 1]["dead"].sum()
         caseData.at[date, "average"] = caseData.iloc[max([i - 6, 0]):i + 1]["new"].sum() / 7
-        caseData.at[date, "positivity"] = caseData.at[date, "pcr"] / (caseData.at[date, "pcr"] + caseData.at[date, "tests"]) if pd.notna(caseData.at[date, "tests"]) else np.nan
 
     print("Cleaning complete; caseData.csv written to file.")
     caseData.to_csv("caseData.csv")
