@@ -59,14 +59,14 @@ def cases(date):
     ''' prompts user for ACT case data '''
 
     print()
-    print(f"Input case data for {date:%A, %B %-d, %Y}:")
+    print(f"Input case data for {date:%A, %B %#d, %Y}:")
     caseData.at[date, "dead"] = float(input("Deaths in past day: "))
-    caseData.at[date, "new"] = float(input("New cases: "))
+    caseData.at[date, "pcr"] = float(input("New cases from PCR tests: "))
+    caseData.at[date, "rat"] = float(input("New cases from RATs: "))
     caseData.at[date, "active"] = float(input("Active cases: "))
     caseData.at[date, "hospitalised"] = float(input("In hospital: "))
     caseData.at[date, "intensive care"] = float(input("In intensive care: "))
     caseData.at[date, "ventilated"] = float(input("On ventilation: "))
-    caseData.at[date, "tests"] = float(input("Negative tests returned: "))
 
     if today > date:
         checkToday(date + pd.Timedelta(days=1))
@@ -86,6 +86,7 @@ def checkToday(date):
 
         else:
             print("Remember to check later today.")
+            clean()
 
     else:
         cases(date)
@@ -93,11 +94,11 @@ def checkToday(date):
 def clean():
     print()
     print("Cleaning irregular data ...")
+    caseData["new"] = caseData["pcr"] + caseData["rat"]
     for i, date in enumerate(caseData.index):
         caseData.at[date, "total"] = caseData.at[date, "new"] + caseData.iloc[0:i]["new"].sum()
         caseData.at[date, "recovered"] = caseData.at[date, "total"] - caseData.at[date, "active"] - caseData.iloc[0:i + 1]["dead"].sum()
         caseData.at[date, "average"] = caseData.iloc[max([i - 6, 0]):i + 1]["new"].sum() / 7
-        caseData.at[date, "positivity"] = caseData.at[date, "new"] / (caseData.at[date, "new"] + caseData.at[date, "tests"]) if pd.notna(caseData.at[date, "tests"]) else np.nan
 
     print("Cleaning complete; caseData.csv written to file.")
     caseData.to_csv("caseData.csv")
