@@ -1,0 +1,105 @@
+@font-face {
+ font-family: ABCSansNovaRegular;
+ src: url(../fonts/ABCSansNova-Regular.otf);
+}
+@font-face {
+ font-family: ABCSansNovaBlack;
+ src: url(../fonts/ABCSansNova-Black.otf);
+}
+@font-face {
+ font-family: ABCSansNovaLight;
+ src: url(../fonts/ABCSansNova-Light.otf);
+}
+
+:root {
+  font-size: 1em;
+  font-family: ABCSansNovaRegular, Helvetica, sans-serif;
+  color: #333;
+  box-sizing: border-box;
+}
+body {
+  margin: 0 0 1rem 0;
+}
+h1, p {
+  margin: 0;
+}
+#container {
+  position: fixed;
+  top: 0;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-flow: column;
+}
+#title {
+  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: .5rem;
+}
+#chart {
+  width: 100%;
+  height: 100%;
+}
+#chartGroup {
+  clip-path: url(#clipPath);
+}
+#key {
+  margin-top: .5rem;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+}
+.keyItem {
+  display: flex;
+}
+.keyItem:first-child {
+  margin-right: 1rem;
+}
+.keyBox {
+  height: 1rem;
+  width: 1rem;
+  background: #037cc2;
+  margin-right: .25rem;
+  border-radius: 50%;
+}
+.keyLabel {
+  font-size: .9rem;
+  line-height: 1rem;
+  color: #037cc2;
+}
+.keyItem.trend .keyLabel {
+  line-height: 1.1rem;
+  color: #00238b;
+}
+.keyItem.trend .keyBox {
+  background: #00238b;
+}
+.axis .tick text {
+  font-size: .75rem;
+  fill: #666;
+}
+.axis .domain {
+  stroke: none;
+}
+.axis .tick line {
+  stroke-dasharray: 2 2;
+  stroke: #ccc;
+}
+.line {
+  stroke: #037cc2;
+  stroke-width: 3;
+  stroke-dasharray: 2 2;
+  fill: none;
+  opacity: 0;
+}
+.line.trend {
+  stroke: #00238b;
+  stroke-width: 3;
+  stroke-dasharray: 1 0;
+  fill: none;
+}
+
+@media only screen and (max-width: 500px) {
+
+}
