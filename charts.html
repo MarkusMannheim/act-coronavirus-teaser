@@ -70,7 +70,7 @@
             .selectAll(".keyItem")
               .data(keyText)
             .enter().append("div")
-              .attr("class", function(d, i) { return i == 0 ? "keyItem" : "keyItem trend"; });
+              .attr("class", function(d, i) { return "keyItem layer" + (i + 1); });
           keys.append("div")
             .classed("keyBox", true);
           keys.append("div")
@@ -80,8 +80,7 @@
           // set up chart elements
           x = d3.scaleTime()
             .domain(d3.extent(startData, function(d) { return d.date; }));
-          y = d3.scaleLinear()
-            .domain([0, d3.max(startData.map(function(d) { return d3.max([d.measure, d.trend]); }))]).nice();
+          y = d3.scaleLinear();
           xAxis = d3.axisBottom(x)
             .ticks(4, "%b %-d")
             .tickSizeOuter(0)
@@ -90,19 +89,38 @@
             .ticks(4, ",.0f")
             .tickSizeOuter(0)
             .tickPadding(5);
-          line = function(field) {
-            return d3.line()
-              .x(function(d) { return x(d.date); })
-              .y(function(d) { return y(d[field]); })
-              .curve(d3.curveNatural);
-          }
-          lineMeasure = chartGroup
-            .append("path")
-              .classed("line", true);
-          if (chartData[0].trend) {
-            lineTrend = chartGroup
+
+          if (param == "new") {
+            y.domain([0, d3.max(startData.map(function(d) { return d3.max([d.measure, d.trend]); }))]).nice();
+            line = function(field) {
+              return d3.line()
+                .x(function(d) { return x(d.date); })
+                .y(function(d) { return y(d[field]); })
+                .curve(d3.curveNatural);
+            }
+            lineMeasure = chartGroup
               .append("path")
-                .classed("line trend", true);
+                .classed("line", true);
+            if (chartData[0].trend) {
+              lineTrend = chartGroup
+                .append("path")
+                  .classed("line trend", true);
+            }
+
+          } else if (param == "new_test" || param == "active" || param == "hospital") {
+            y.domain([0, d3.max(startData.map(function(d) { return d.max; }))]).nice();
+            stack = d3.stack()
+              .keys(Object.keys(chartData[0]).slice(2).reverse());
+            area = d3.area()
+              .x(function(d) { return x(d.data.date); })
+              .y1(function(d) { return y(d[1]); })
+              .y0(function(d) { return y(d[0]); })
+              .curve((param == "hospital" ? d3.curveStep : d3.curveNatural));
+            layers = chartGroup
+              .selectAll(".layer")
+                .data(stack(chartData))
+              .enter().append("path")
+                .attr("class", function(d) { return "layer " + d.key; });
           }
 
           // set up frame activation
@@ -130,11 +148,41 @@
             // sort based on param
             if (param == "new") {
               titleText = "New infections per day";
-              keyText = ["cases", "seven-day average"];
+              keyText = ["cases", "weekly average"];
               datum = {
                 date: d.date,
                 measure: d.new,
                 trend: d.average
+              };
+
+            } else if (param == "new_test") {
+              titleText = "How cases were detected";
+              keyText = ["PCR (laboratory)", "RAT (home)"];
+              datum = {
+                date: d.date,
+                max: d.new,
+                layer1: d.pcr,
+                layer2: d.rat
+              };
+
+            } else if (param == "active") {
+              titleText = "Infected Canberrans";
+              keyText = ["active cases"];
+              datum = {
+                date: d.date,
+                max: d.active,
+                layer1: d.active
+              };
+
+            } else if (param == "hospital") {
+              titleText = "Hospitalised patients";
+              keyText = ["hospitalised", "ICU", "ventilated"];
+              datum = {
+                date: d.date,
+                max: d.hospitalised,
+                layer1: (d.hospitalised - d["intensive care"] - d.ventilated),
+                layer2: (d["intensive care"] - d.ventilated),
+                layer3: d.ventilated
               };
             }
 
@@ -166,7 +214,7 @@
       }
 
       function drawChart() {
-        d3.selectAll("#key, .line")
+        d3.selectAll("#key, #chartGroup")
           .transition()
             .duration(1000)
             .style("opacity", 1);
@@ -180,8 +228,13 @@
           .attr("width", chartWidth - margin.left - margin.right)
           .attr("height", chartHeight);
 
-        lineMeasure.attr("d", line("measure")(chartData));
-        if (lineTrend) lineTrend.attr("d", line("trend")(chartData));
+        if (param == "new") {
+          lineMeasure.attr("d", line("measure")(chartData));
+          if (lineTrend) lineTrend.attr("d", line("trend")(chartData));
+
+        } else if (param == "new_test" ||  param == "active" || param == "hospital") {
+          layers.attr("d", function(d) { return area(d); });
+        }
 
         xAxis.tickSizeInner([margin.top + margin.bottom - chartHeight]);
         yAxis.tickSizeInner([margin.left + margin.right - chartWidth]);
@@ -195,7 +248,7 @@
       }
 
       function animate() {
-        loop = 200;
+        loop = 150;
         i = 6;
 
         animateFrame = d3.interval(function() {
@@ -204,17 +257,26 @@
             currentData = chartData.slice(0, i);
 
             x.domain(d3.extent(currentData, function(d) { return d.date; }));
-            y.domain([0, d3.max(currentData.map(function(d) { return d3.max([d.measure, d.trend]); }))]).nice();
 
-            lineMeasure.transition()
-              .duration(loop)
-              .ease(d3.easeLinear)
-              .attr("d", line("measure")(chartData));
-            if (lineTrend) {
-              lineTrend.transition()
+            if (param == "new") {
+              y.domain([0, d3.max(currentData.map(function(d) { return d3.max([d.measure, d.trend]); }))]);
+              lineMeasure.transition()
                 .duration(loop)
                 .ease(d3.easeLinear)
-                .attr("d", line("trend")(chartData));
+                .attr("d", line("measure")(chartData));
+              if (lineTrend) {
+                lineTrend.transition()
+                  .duration(loop)
+                  .ease(d3.easeLinear)
+                  .attr("d", line("trend")(chartData));
+              }
+
+            } else if (param == "new_test" || param == "active" || param == "hospital") {
+              y.domain([0, d3.max(currentData.map(function(d) { return d.max; }))]);
+              layers.transition()
+                .duration(loop)
+                .ease(d3.easeLinear)
+                .attr("d", function(d) { return area(d); });
             }
 
             xAxisGroup.transition()
