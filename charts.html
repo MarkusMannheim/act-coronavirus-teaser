@@ -89,14 +89,15 @@
             .ticks(4, ",.0f")
             .tickSizeOuter(0)
             .tickPadding(5);
+          if (param == "positivity") yAxis.ticks(4, ".1%");
 
-          if (param == "new") {
+          if (param == "new" || param == "positivity") {
             y.domain([0, d3.max(startData.map(function(d) { return d3.max([d.measure, d.trend]); }))]).nice();
             line = function(field) {
               return d3.line()
                 .x(function(d) { return x(d.date); })
                 .y(function(d) { return y(d[field]); })
-                .curve(d3.curveNatural);
+                .curve(d3.curveBasis);
             }
             lineMeasure = chartGroup
               .append("path")
@@ -115,7 +116,7 @@
               .x(function(d) { return x(d.data.date); })
               .y1(function(d) { return y(d[1]); })
               .y0(function(d) { return y(d[0]); })
-              .curve((param == "hospital" ? d3.curveStep : d3.curveNatural));
+              .curve((param == "hospital" ? d3.curveStep : d3.curveBasis));
             layers = chartGroup
               .selectAll(".layer")
                 .data(stack(chartData))
@@ -153,6 +154,15 @@
                 date: d.date,
                 measure: d.new,
                 trend: d.average
+              };
+
+            } else if (param == "positivity") {
+              titleText = "Test positive rate";
+              keyText = ["positivity", "weekly average"];
+              datum = {
+                date: d.date,
+                measure: d.positivity,
+                trend: d.positivity_trend
               };
 
             } else if (param == "new_test") {
@@ -228,9 +238,9 @@
           .attr("width", chartWidth - margin.left - margin.right)
           .attr("height", chartHeight);
 
-        if (param == "new") {
-          lineMeasure.attr("d", line("measure")(chartData));
-          if (lineTrend) lineTrend.attr("d", line("trend")(chartData));
+        if (param == "new" || param == "positivity") {
+          lineMeasure.attr("d", line("measure")(chartData.filter(function(d) { return d.measure; })));
+          if (lineTrend) lineTrend.attr("d", line("trend")(chartData.filter(function(d) { return d.trend; })));
 
         } else if (param == "new_test" ||  param == "active" || param == "hospital") {
           layers.attr("d", function(d) { return area(d); });
@@ -258,17 +268,17 @@
 
             x.domain(d3.extent(currentData, function(d) { return d.date; }));
 
-            if (param == "new") {
+            if (param == "new" || param == "positivity") {
               y.domain([0, d3.max(currentData.map(function(d) { return d3.max([d.measure, d.trend]); }))]);
               lineMeasure.transition()
                 .duration(loop)
                 .ease(d3.easeLinear)
-                .attr("d", line("measure")(chartData));
+                .attr("d", line("measure")(chartData.filter(function(d) { return d.measure; })));
               if (lineTrend) {
                 lineTrend.transition()
                   .duration(loop)
                   .ease(d3.easeLinear)
-                  .attr("d", line("trend")(chartData));
+                  .attr("d", line("trend")(chartData.filter(function(d) { return d.trend; })));
               }
 
             } else if (param == "new_test" || param == "active" || param == "hospital") {
@@ -303,7 +313,7 @@
 
         margin = chartWidth < 500 ?
           { top: 5, right: 5, bottom: 25, left: 20 } :
-          { top: 5, right: 5, bottom: 20, left: 35 };
+          { top: 5, right: 5, bottom: 20, left: 40 };
 
         drawChart();
       }
