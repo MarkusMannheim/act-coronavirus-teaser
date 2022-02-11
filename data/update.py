@@ -59,7 +59,7 @@ def cases(date):
     ''' prompts user for ACT case data '''
 
     print()
-    print(f"Input case data for {date:%A, %B %#d, %Y}:")
+    print(f"Input case data for {date:%A, %B %-d, %Y}:")
     caseData.at[date, "dead"] = float(input("Deaths in past day: "))
     caseData.at[date, "pcr"] = float(input("New cases from PCR tests: "))
     caseData.at[date, "rat"] = float(input("New cases from RATs: "))
