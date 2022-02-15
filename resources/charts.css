@@ -116,5 +116,27 @@ h1, p {
 }
 
 @media only screen and (max-width: 500px) {
-
+ #title {
+   font-size: 1rem;
+   margin-bottom: .25rem;
+ }
+ #key {
+   margin-top: .25rem;
+ }
+ .keyItem {
+   display: flex;
+   margin-right: 1rem;
+ }
+ .keyBox {
+   height: .85rem;
+   width: .85rem;
+   margin-right: .25rem;
+ }
+ .keyLabel {
+   font-size: .8rem;
+   line-height: .85rem;
+ }
+ .axis .tick text {
+   font-size: .7rem;
+ }
 }
