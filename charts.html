@@ -270,7 +270,7 @@
 
             if (param == "new" || param == "positivity") {
               y.domain([0, d3.max(currentData.map(function(d) { return d3.max([d.measure, d.trend]); }))]);
-              if (y.domain()[1] >= .05) yAxis.ticks(4, ".0%");
+              if (param == "positivity" && y.domain()[1] >= .05) yAxis.ticks(4, ".0%");
               lineMeasure.transition()
                 .duration(loop)
                 .ease(d3.easeLinear)
