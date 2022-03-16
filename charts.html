@@ -116,7 +116,7 @@
               .x(function(d) { return x(d.data.date); })
               .y1(function(d) { return y(d[1]); })
               .y0(function(d) { return y(d[0]); })
-              .curve((param == "hospital" ? d3.curveStep : d3.curveBasis));
+              .curve((param == "hospital" ? d3.curveStepBefore : d3.curveBasis));
             layers = chartGroup
               .selectAll(".layer")
                 .data(stack(chartData))
