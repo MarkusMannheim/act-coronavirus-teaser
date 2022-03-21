@@ -97,7 +97,7 @@
               return d3.line()
                 .x(function(d) { return x(d.date); })
                 .y(function(d) { return y(d[field]); })
-                .curve(d3.curveBasis);
+                .curve(d3.curveNatural);
             }
             lineMeasure = chartGroup
               .append("path")
@@ -116,7 +116,7 @@
               .x(function(d) { return x(d.data.date); })
               .y1(function(d) { return y(d[1]); })
               .y0(function(d) { return y(d[0]); })
-              .curve((param == "hospital" ? d3.curveStepBefore : d3.curveBasis));
+              .curve((param == "hospital" ? d3.curveStepBefore : d3.curveNatural));
             layers = chartGroup
               .selectAll(".layer")
                 .data(stack(chartData))
