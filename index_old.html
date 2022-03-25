@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155991615-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "UA-155991615-1");
+    </script>
+
+    <!-- metaphysics -->
+    <meta charset="utf-8">
+    <title>ACT COVID-19 snapshot</title>
+    <meta name="author" content="Markus Mannheim">
+    <meta name="keywords" content="covid19, coronavirus, canberra, act, abc, updates, statistics, data">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- stuff for scrapers -->
+    <meta property="og:title" content="ACT COVID-19 snapshot">
+    <meta property="og:description" content="Visualising the disease and vaccine progress in Canberra.">
+    <meta property="og:image" content="https://markusmannheim.github.io/act-coronavirus-teaser/resources/graph.jpg">
+    <meta property="og:url" content="https://markusmannheim.github.io/act-coronavirus-teaser/">
+    <meta property="og:type" content="website">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:site" content="@MarkusMannheim">
+    <meta property="twitter:creator" content="@MarkusMannheim">
+
+    <!-- scripts -->
+    <script src="./resources/d3.v7.min.js"></script>
+    <link href="./resources/style.css" rel="stylesheet">
+    <link href="./resources/abcLogo64.png" rel="icon">
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="subcontainer">
+        <div id="outcomeDiv">
+          <svg id="outcomeChart" width=0 height=0>
+            <g id="outcomeAxisGroup">
+              <g id="outcomeXAxisGroup" class="axis"></g>
+              <g id="outcomeYAxisGroup" class="axis"></g>
+            </g>
+            <g id="outcomeChartGroup">
+              <text class="chartLabel">ACT HEALTH OUTCOMES:</text>
+            </g>
+          </svg>
+
+          <div id="outcomeLegend">
+            <div class="legend" id="legendHospitalised">hospitalised</div>
+            <div class="legend" id="legendIntensiveCare">ICU</div>
+            <div class="legend" id="legendVentilated">ventilated</div>
+            <div class="legend" id="legendDeaths">dead</div>
+          </div>
+        </div>
+        <div id="vaccineDiv">
+          <svg id="vaccineChart" width=0 height=0>
+            <g id="vaccineChartGroup">
+              <rect id="vaccineBackground"></rect>
+              <text class="chartLabel">VACCINATIONS:</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div id="notes">Infection data as of <span id='caseDate'></span>; vaccine data as of <span id='vaxDate'></span>.
+        Vaccination rates based on entire population (estimated for June 2021).
+        Sources: ACT Health, federal Health Department, Australian Bureau of Statistics.</div>
+    </div>
+
+    <script>
+      // page elements
+      container = d3.select("#container");
+      subcontainer = d3.select("#subcontainer");
+      outcomeDiv = d3.select("#outcomeDiv");
+      outcomeChart = d3.select("#outcomeChart");
+      outcomeChartGroup = d3.select("#outcomeChartGroup");
+      outcomeAxisGroup = d3.select("#outcomeAxisGroup");
+      outcomeXAxisGroup = d3.select("#outcomeXAxisGroup");
+      outcomeYAxisGroup = d3.select("#outcomeYAxisGroup");
+      vaccineDiv = d3.select("#vaccineDiv");
+      vaccineChart = d3.select("#vaccineChart");
+      vaccineChartGroup = d3.select("#vaccineChartGroup");
+      vaccineBackground = d3.select("#vaccineBackground");
+      caseDate = d3.select("#caseDate");
+      vaxDate = d3.select("#vaxDate");
+
+      // load data
+      Promise.all([
+        d3.csv("./data/caseData.csv"),
+        d3.csv("./data/vaxData.csv")
+      ])
+        .then(function(data) {
+
+          // format data
+          caseData = data[0]
+            .map(function(d) {
+              for (i in Object.keys(d)) {
+                if (Object.keys(d)[i] == "date") {
+                  d.date = new Date(d[Object.keys(d)[i]]);
+                } else {
+                  d[Object.keys(d)[i]] = +d[Object.keys(d)[i]];
+                }
+              }
+              return d;
+            });
+
+          vaxData = data[1][0];
+          for (i in Object.keys(vaxData)) {
+            if (Object.keys(vaxData)[i] == "date") {
+              vaxData.date = new Date(vaxData.date);
+            } else {
+              vaxData[Object.keys(vaxData)[i]] = +vaxData[Object.keys(vaxData)[i]];
+            }
+          }
+
+          // update info fields with dates
+          lastCaseDate = caseData[caseData.length - 1].date;
+          caseDate.text(d3.timeFormat("%b %-d")(lastCaseDate));
+          lastVaxDate = vaxData.date;
+          vaxDate.text(d3.timeFormat("%b %-d")(lastVaxDate));
+
+          // draw outcome chart
+          chartData = caseData
+            .filter(function(d) {
+               return lastCaseDate - d.date < (28 * 24 * 60 * 60 * 1000);
+            })
+            .map(function(d) {
+              return {
+                date: d.date,
+                dead: d.dead,
+                ventilated: d.ventilated,
+                "intensive care": d["intensive care"] - d.ventilated,
+                hospitalised: d.hospitalised - d["intensive care"]
+              };
+            });
+
+          stack = d3.stack()
+            .keys(["dead", "ventilated", "intensive care", "hospitalised"])
+            (chartData);
+
+          outcomeX = d3.scaleTime()
+            .domain(d3.extent(chartData, function(d) { return d.date; }));
+          outcomeXBars = d3.scaleBand()
+            .domain(chartData.map(function(d) { return d.date; }))
+            .padding(.05);
+          outcomeY = d3.scaleLinear()
+            .domain([0, d3.max(chartData, function(d) { return d.hospitalised + d["intensive care"] + d.ventilated + d.dead; })]);
+
+          outcomeXAxis = d3.axisBottom(outcomeX)
+            .ticks(3, "%b %-d")
+            .tickSize(0);
+          outcomeYAxis = d3.axisRight(outcomeY)
+            .ticks(3, "1s")
+            .tickSize(0);
+
+          layers = outcomeChartGroup
+            .selectAll(".layer")
+              .data(stack)
+            .enter().append("g")
+              .attr("class", function(d) { return d.key.replace(" ", "") + " layer"; });
+
+          layers.each(function(d) {
+            d3.select(this)
+              .selectAll(".bar")
+                .data(d)
+              .enter().append("rect")
+                .classed("bar", true);
+          });
+
+          // draw vaccine bar
+          vaccineX = d3.scaleLinear()
+            .domain([0, 432266]);
+
+          vaccineData = [
+            { name: "boosted", value: vaxData.boosters, start: 0 },
+            { name: "two doses", value: vaxData.second, start: vaxData.boosters },
+            { name: "one dose", value: vaxData.first, start: vaxData.second }
+          ];
+
+          vaxBars = vaccineChartGroup
+            .selectAll(".vaxBar")
+              .data(vaccineData)
+            .enter().append("rect")
+              .attr("class", function(d) { return d.name.replace(" ", "") + " vaxBar"; })
+          vaxLabels = vaccineChartGroup
+            .selectAll(".vaxLabel")
+              .data(vaccineData)
+            .enter().append("text")
+              .attr("class", function(d) { return d.name.replace(" ", "") + " vaxLabel"; })
+              .text(function(d) { return d.name.replace("one", "1").replace("two", "2") + ": " + d3.format(".1%")(d.value / 432266); });
+
+          // pause then resize
+          d3.timeout(function() {
+            window.addEventListener("resize", resize);
+            resize();
+            d3.timeout(function() {
+              resize();
+            }, 500);
+          }, 500);
+
+        });
+
+      function resize() {
+        outcomeDimensions = outcomeChart.node().getBoundingClientRect();
+        vaccineDimensions = vaccineChart.node().getBoundingClientRect();
+        vaxLabelHeight = document.querySelector(".vaxLabel").getBBox().height;
+        d3.selectAll(".chartLabel")
+          .attr("y", 12);
+
+        // draw outcomes chart
+        outcomeMargin = { top: 0, right: 15, bottom: 12, left: 10 };
+        outcomeX.range([outcomeMargin.left + outcomeXBars.bandwidth() / 2, outcomeDimensions.width - outcomeMargin.right -  + outcomeXBars.bandwidth() / 2]);
+        outcomeXBars.range([outcomeMargin.left, outcomeDimensions.width - outcomeMargin.right]);
+        outcomeY.range([outcomeDimensions.height - outcomeMargin.bottom, outcomeMargin.top]);
+
+        outcomeXAxisGroup.attr("transform", "translate(0, " + (outcomeDimensions.height - outcomeMargin.bottom) + ")")
+          .call(outcomeXAxis);
+        outcomeYAxis.tickSizeInner(outcomeMargin.left + outcomeMargin.right - outcomeDimensions.width);
+        outcomeYAxisGroup.attr("transform", "translate(" + (outcomeDimensions.width - outcomeMargin.right) + ", 0)")
+          .call(outcomeYAxis);
+
+        d3.selectAll(".bar")
+          .attr("x", function(d) { return outcomeXBars(d.data.date); })
+          .attr("y", function(d) { return outcomeY(d[1]); })
+          .attr("height", function(d) { return outcomeY(d[0]) - outcomeY(d[1]); })
+          .attr("width", outcomeXBars.bandwidth());
+
+        // draw vaccine bar
+        vaccineX.range([0, vaccineDimensions.width]);
+        vaccineMargin = 17;
+
+        vaccineBackground.attr("width", vaccineDimensions.width)
+          .attr("height", vaccineDimensions.height - vaccineMargin)
+          .attr("y", vaccineMargin);
+        vaxBars.attr("height", vaccineDimensions.height - vaccineMargin)
+          .attr("x", function(d) { return vaccineX(d.start); })
+          .attr("y", vaccineMargin)
+          .attr("width", function(d) { return vaccineX(d.value) - vaccineX(d.start); })
+
+        vaxLabels.attr("y", vaccineMargin + (document.body.getBoundingClientRect().width < 500 ? 18 : 20))
+          .attr("x", function(d) {
+            return d.name == "boosted" ? 10 :
+              d.name == "one dose" ? vaccineDimensions.width - 10 :
+              0;
+          });
+        d3.select(".vaxLabel.twodoses")
+          .attr("x", d3.min([document.querySelector(".vaxLabel.onedose").getBBox().x, document.querySelector(".vaxBar.twodoses").getBBox().width + document.querySelector(".vaxBar.twodoses").getBBox().x]) - 10);
+      }
+    </script>
+  </body>
+</html>
