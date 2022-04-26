@@ -226,7 +226,7 @@
       function drawChart() {
         d3.selectAll("#key, #chartGroup")
           .transition()
-            .duration(1000)
+            .duration(500)
             .style("opacity", 1);
 
         x.range([margin.left, chartWidth - margin.right]);
@@ -254,11 +254,11 @@
         yAxisGroup.attr("transform", "translate(" + margin.left + ", 0)")
           .call(yAxis);
 
-        d3.timeout(animate, 1500);
+        d3.timeout(animate, 1000);
       }
 
       function animate() {
-        loop = 100;
+        loop = 50;
         i = 6;
 
         animateFrame = d3.interval(function() {
