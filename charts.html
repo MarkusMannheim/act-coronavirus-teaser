@@ -51,7 +51,7 @@
       clipPath = d3.select("#clipPath")
       xAxisGroup = d3.select("#xAxisGroup");
       yAxisGroup = d3.select("#yAxisGroup");
-      loadTarget = document.querySelector("#chart");
+      loadTarget = document.querySelector("#key");
 
       // chart type
       param = new URL(window.location.href).searchParams.get("field");
@@ -61,8 +61,6 @@
         .then(function(data) {
 
           chartData = prepareData(data);
-          startData = chartData
-            .slice(0, 7);
 
           // fill fields
           title.text(titleText);
@@ -79,7 +77,7 @@
 
           // set up chart elements
           x = d3.scaleTime()
-            .domain(d3.extent(startData, function(d) { return d.date; }));
+            .domain(d3.extent(chartData, function(d) { return d.date; }));
           y = d3.scaleLinear();
           xAxis = d3.axisBottom(x)
             .ticks(4, "%b %-d")
@@ -92,12 +90,12 @@
           if (param == "positivity") yAxis.ticks(4, ".1%");
 
           if (param == "new" || param == "positivity") {
-            y.domain([0, d3.max(startData.map(function(d) { return d3.max([d.measure, d.trend]); }))]).nice();
+            y.domain([0, d3.max(chartData.map(function(d) { return d3.max([d.measure, d.trend]); }))]).nice();
             line = function(field) {
               return d3.line()
                 .x(function(d) { return x(d.date); })
                 .y(function(d) { return y(d[field]); })
-                .curve(d3.curveNatural);
+                .curve((param == "positivity" && field == "trend" ? d3.curveStepBefore : d3.curveNatural));;
             }
             lineMeasure = chartGroup
               .append("path")
@@ -109,14 +107,14 @@
             }
 
           } else if (param == "new_test" || param == "active" || param == "hospital") {
-            y.domain([0, d3.max(startData.map(function(d) { return d.max; }))]).nice();
+            y.domain([0, d3.max(chartData.map(function(d) { return d.max; }))]).nice();
             stack = d3.stack()
               .keys(Object.keys(chartData[0]).slice(2).reverse());
             area = d3.area()
               .x(function(d) { return x(d.data.date); })
               .y1(function(d) { return y(d[1]); })
               .y0(function(d) { return y(d[0]); })
-              .curve((param == "hospital" ? d3.curveStepBefore : d3.curveNatural));
+              .curve(d3.curveNatural);
             layers = chartGroup
               .selectAll(".layer")
                 .data(stack(chartData))
@@ -253,56 +251,6 @@
           .call(xAxis);
         yAxisGroup.attr("transform", "translate(" + margin.left + ", 0)")
           .call(yAxis);
-
-        d3.timeout(animate, 1000);
-      }
-
-      function animate() {
-        loop = 50;
-        i = 6;
-
-        animateFrame = d3.interval(function() {
-          i++;
-          if (i < chartData.length) {
-            currentData = chartData.slice(0, i);
-
-            x.domain(d3.extent(currentData, function(d) { return d.date; }));
-
-            if (param == "new" || param == "positivity") {
-              y.domain([0, d3.max(currentData.map(function(d) { return d3.max([d.measure, d.trend]); }))]);
-              if (param == "positivity" && y.domain()[1] >= .05) yAxis.ticks(4, ".0%");
-              lineMeasure.transition()
-                .duration(loop)
-                .ease(d3.easeLinear)
-                .attr("d", line("measure")(chartData.filter(function(d) { return d.measure; })));
-              if (lineTrend) {
-                lineTrend.transition()
-                  .duration(loop)
-                  .ease(d3.easeLinear)
-                  .attr("d", line("trend")(chartData.filter(function(d) { return d.trend; })));
-              }
-
-            } else if (param == "new_test" || param == "active" || param == "hospital") {
-              y.domain([0, d3.max(currentData.map(function(d) { return d.max; }))]);
-              layers.transition()
-                .duration(loop)
-                .ease(d3.easeLinear)
-                .attr("d", function(d) { return area(d); });
-            }
-
-            xAxisGroup.transition()
-              .duration(loop)
-              .ease(d3.easeLinear)
-              .call(xAxis);
-            yAxisGroup.transition()
-              .duration(loop)
-              .ease(d3.easeLinear)
-              .call(yAxis);
-
-          } else {
-            animateFrame.stop();
-          }
-        }, loop);
       }
 
       function resizer() {
