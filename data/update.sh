@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "*** ACT COVID-19 and vaccination update ***"
-echo 
+echo "Starting ACT COVID-19 update ..."
+echo
 
 git fetch --all
 git reset --hard origin/gh-pages
